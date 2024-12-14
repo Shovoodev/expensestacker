@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
 
-export const useProduct = () => {
+export const useproduct = () => {
   const [allProducts, setAllProducts] = useState(null);
-  const { groupId } = useParams();
 
   const getAllProducts = () => {
-    fetch(`http://localhost:3333/${groupId}/products`)
+    fetch(`http://localhost:3333/products`)
       .then((res) => res.json())
       .then((data) => {
         setAllProducts(data);
@@ -16,7 +14,10 @@ export const useProduct = () => {
       });
   };
 
-  useEffect(() => {}, [groupId]);
+  useEffect(() => {
+    getAllProducts()
+
+  }, []);
 
   return { allProducts, setAllProducts };
 };

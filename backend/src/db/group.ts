@@ -5,14 +5,16 @@ const groupSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  owner_id: { type: String, permissionStatus: false },
+  owner_id: { type: String, required: true },
   users: { type: Array },
   created_at: { type: Date, default: Date.now },
 });
 export const groupModel = mongoose.model("GROUPS", groupSchema);
 export const getOwner = (owner_id: string) => groupModel.findOne({ owner_id });
-export const getGroups = () => groupModel.find();
-export const getGroupById = (id: string) => groupModel.findById(id).exec();
+export const getGroups = (userId: string) =>
+  groupModel.find({ owner_id: userId });
+export const getGroupById = (groups_id: string) =>
+  groupModel.findById(groups_id);
 export const createGroup = (values: Record<string, any>) =>
   new groupModel(values).save().then((user) => user.toObject());
 export const deleteGroupById = (id: string) =>

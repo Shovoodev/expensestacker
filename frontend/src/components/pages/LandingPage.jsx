@@ -13,7 +13,7 @@ const LandingPage = () => {
             <h1 className="text-4xl md:text-6xl font-bold">
               Welcome to Your Website
             </h1>
-            <p className="text-lg md:text-xl mt-4">expece management</p>
+            <p className="text-lg md:text-xl mt-4">Expese management</p>
             <div className="mt-6">
               <button className="bg-white text-blue-500 font-semibold px-6 py-3 rounded-md shadow hover:bg-gray-200">
                 <NavLink to="/signup"> Get Started</NavLink>

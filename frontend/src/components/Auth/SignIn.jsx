@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import LoadingSceen from "../main/LoadingSceen";
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,19 +17,19 @@ const SignIn = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(userData),
-      credentials: "include", 
+      credentials: "include",
     })
       .then((res) => res.json())
       .then(async (data) => {
         if (data._id) {
           setTimeout(() => {
             setIsLoading(true);
-            navigate("/admin");
-            setIsLoading(false)
+            navigate("/user");
+            setIsLoading(false);
           }, 1000);
           localStorage.setItem("user", JSON.stringify(data));
         }
-      })
+      });
   };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

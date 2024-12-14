@@ -1,44 +1,68 @@
 import express from "express";
-import { createGroup, deleteGroupById, getGroupById, getGroups } from "./../db/group";
-export const registerGroup = async (
+import { AuthenticatedRequest } from "./types";
+import {
+  createGroup,
+  deleteGroupById,
+  getGroupById,
+  getGroups,
+} from "./../db/group";
+import { getUserById } from "./../db/user";
+export const registerUserGroup = async (
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
   try {
+    const { userId } = req.params; //ai id ta always null ase
+    console.log(userId);
+
     const { name } = req.body;
     if (!name) {
-      return res.sendStatus(400);
+      return res.status(400);
     }
     const group = await createGroup({
       name,
+      owner_id: userId,
     });
-    return res.status(200).json(group).end();
+    console.log({ group });
+
+    return res.status(200).json(group);
   } catch (error) {
     console.log(error);
-    return res.sendStatus(400);
+    return res.status(400);
   }
 };
 
-export const getAllGroupts = async (
-  req: express.Request,
+// export const getAllGroups = async (
+//   req: AuthenticatedRequest,
+//   res: express.Response
+// ): Promise<any> => {
+//   try {
+//     const user = req.identity;
+
+//     console.log({ user });
+
+//     const data = await getGroups(user.id);
+
+//     if (data) {
+//       return res.status(200).json(data);
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400);
+//   }
+// };
+
+export const getGroupsByUser = async (
+  req: AuthenticatedRequest,
   res: express.Response
 ): Promise<any> => {
   try {
-    const groups = await getGroups();
-    return res.status(200).json(groups).end();
-  } catch (error) {
-    console.log(error);
-    res.sendStatus(400);
-  }
-}
-export const getGroupt = async (
-  req: express.Request,
-  res: express.Response
-): Promise<any> => {
-  const {id} = req.params
-  try {
-    const groups = await getGroupById(id);
-    return res.status(200).json(groups).end();
+    const user = req.identity;
+
+    const data = await getGroups(user.id);
+    if (data) {
+      return res.status(200).json(data);
+    }
   } catch (error) {
     console.log(error);
     res.sendStatus(400);

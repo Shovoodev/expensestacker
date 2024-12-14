@@ -1,22 +1,52 @@
 import express from 'express'
-import { createExpenses } from './../db/expenses';
+import { createExpenses, getExpenses, getExpensesById } from './../db/expenses';
+import { getGroupById } from './../db/group';
 
-export const registerGroup = async (
+export const registerExpenceOnGroup = async (
     req: express.Request,
     res: express.Response
   ): Promise<any> => {
     try {
-      const { expense  } = req.body;
-      if (!expense  ) {
-        return res.sendStatus(400);
+      const { groupId } = req.params;
+      const { expensename } = req.body;
+      console.log({groupId , expensename});
+      
+      if (!expensename ) {
+        return res.status(400);
       }
-      const group = await createExpenses({
-        expense,
-      })
-      return res.status(200).json(expense).end();
+      const group = await getGroupById(groupId);
+  
+      if (!group) {
+        return res.status(404).json({ error: "expense not found" });
+      }
+      const expense = await createExpenses({
+        expensename,
+        group_id : groupId
+      });
+  
+      const data = { ...group, ...expense };
+  
+      return res.status(200).json(data);
     } catch (error) {
       console.log(error);
-      return res.sendStatus(400);
+      return res.status(400);
     }
   };
 
+  export const getExpenseOnGroup = async (
+    req: express.Request,
+    res: express.Response
+  ): Promise<any> => {
+    const {groupId }= req.params;
+    try {
+       const data = await getExpenses(groupId);
+       console.log(data);
+       
+          if (data) {
+            return res.status(200).json(data);
+          }
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error: "Failed to fetch expenses" });
+    }
+  };

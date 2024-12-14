@@ -1,10 +1,10 @@
 import express  from 'express'
-import { delteteGroup, getAllGroupts, getGroupt , registerGroup } from './../controllers/groupController';
+import { delteteGroup, getGroupsByUser , registerUserGroup } from './../controllers/groupController';
+import { isAuthenticated } from '../middlewares';
 
 
 export default (router: express.Router)=> {
-    router.get('/groups' , getAllGroupts)
-    router.get('/group/:id', getGroupt)
-    router.post('/group/register', registerGroup);
+    router.get('/groups',isAuthenticated , getGroupsByUser)
+    router.post('/:userId/group/register', registerUserGroup);
     router.delete('/group/delete/:id',  delteteGroup)
 }

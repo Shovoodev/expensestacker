@@ -4,14 +4,14 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
-  expense_id: { type: Number },
-  group_id: { type: String },
+  expense_id: { type: String, required: true },
+  group_id: { type: String, required: true },
   created_at: { type: Date, default: Date.now },
 });
 export const productModel = mongoose.model("Product", productSchema);
 export const getProducts = () => productModel.find();
-export const getProductByGroupId = (group_id: string) =>
-  productModel.find({ group_id });
+export const getProductByExpenseId = (expense_id: string) =>
+  productModel.find({ expense_id });
 export const getProductById = (id: string) => productModel.findById(id).exec();
 export const createProduct = (values: Record<string, any>) =>
   new productModel(values).save().then((product) => product.toObject());

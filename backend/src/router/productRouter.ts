@@ -1,9 +1,9 @@
 import express  from 'express'
-import { deleteProduct, getAllProducts, registerProductOnGroup , getGroupProducts } from './../controllers/productController';
+import { deleteProduct, registerProductOnExpenses , getExpenseProducts } from './../controllers/productController';
 
 
 export default (router: express.Router)=> {
-    router.post('/:id/product/register', registerProductOnGroup);
-    router.get('/:id/products',  getGroupProducts)
+    router.post('/group/:groupId/expense/:expenseId/product/register', registerProductOnExpenses);
+    router.get('/group/:groupId/expense/:expenseId/products', getExpenseProducts)
     router.delete('/:id/product/delete/:id',deleteProduct)
 }

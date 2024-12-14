@@ -1,8 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { User, Bell } from "lucide-react";
 
-const GroupeNavbar = () => {
+const GroupeNavbar = ({client}) => {
   const navigate = useNavigate();
 
   const handleLogOut = async() => {
@@ -19,21 +19,20 @@ const GroupeNavbar = () => {
   }
   return (
     <>
-      <nav className="bg-gray-800 w-[80%] ml-[20%] px-4 py-3">
-        
-        <div className=" flex items-center justify-end gap-x-5">
-          
-          <div className="text-white">
-            <Bell className="w-7 h-7 mt-1" />
-          </div>
-          <div className=" relative">
-            <button onClick={handleLogOut}  className=" text-white group">
-              <User className="w-7 h-7 mt-1" color="white" />
-            
+      <nav className="bg-[#f8f9fa] flex justify-between gap-4 mb-4 px-4 py-3">
+      <h1 class="text-3xl font-bold  text-gray-800">Expense Tracker</h1>
+      <div className="flex gap-3">
+            <Bell color="black" className="w-7 h-7 mt-1" />
+            <button className=" text-white group">
+              <NavLink to="/signin">
+
+              <User  className="w-7 h-7 mt-1" color="black" />
+              </NavLink>
             </button>
-          </div>
-        </div>
+      </div>
       </nav>
+      <p class="text-2xl font-bold ml-4 text-gray-800 mb-4" > {`Welcome ${client}`}</p>
+
     </>
   );
 };

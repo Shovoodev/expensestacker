@@ -1,17 +1,20 @@
-import Group from "../group/Group";
+import { NavLink } from "react-router";
 import { useUser } from "../hook/use-user";
-import Product from "../products/Product";
-import GroupeNavbar from "./GroupeNavbar";
-import Sidebar from "./Sidebar";
+import GeneralNavbar from "./GeneralNavbar";
 
 const User = () => {
   const { user } = useUser();
-
   return (
     <>
-      <Sidebar client={user?.username} />
-      <GroupeNavbar />
-      <Group />
+      <GeneralNavbar client={user?.username} />
+      <div className="mb-6 flex ">
+        <button className="flex ml-[5%] items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+          <NavLink to={`/groups`}>groups</NavLink>
+        </button>
+        <button className="flex ml-[5%] items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+          <NavLink to="/">Members</NavLink>
+        </button>
+      </div>
     </>
   );
 };

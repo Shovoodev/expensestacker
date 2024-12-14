@@ -12,15 +12,9 @@ export const login = async (
     if (!email || !password) {
       return res.status(403).json({ error: "email or password is wrong" });
     }
-    console.log(email);
-    console.log(password);
-
     const user = await getUserByEmail(email).select(
       "+authentication.salt +authentication.password"
     );
-
-    console.log({ user });
-
     if (!user) {
       return res.status(403).json({ error: "User is not registered" });
     }
@@ -51,7 +45,6 @@ export const login = async (
       username: user.username,
     });
   } catch (error) {
-
     console.error(error);
     res.status(400);
   }
@@ -93,8 +86,6 @@ export const logOut = async (
   res: express.Response
 ): Promise<any> => {
   try {
-
-  
     res.clearCookie("VIDEO", {
       domain: "localhost",
       path: "/",
@@ -105,4 +96,4 @@ export const logOut = async (
     console.error(error);
     return res.status(500).json({ error: "An error occurred during logout" });
   }
-}
+};
