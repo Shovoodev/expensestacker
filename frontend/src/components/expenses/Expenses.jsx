@@ -5,13 +5,16 @@ import GeneralNavbar from "../main/GeneralNavbar";
 import ExpenseButton from "./ExpenseButton";
 import { useParams } from "react-router";
 
+import { useNavigate } from "react-router-dom";
 
 const Expenses = () => {
   const [newExpense, setNewExpense] = useState({ expensename: "" });
   const [printAllExpenses, setPrintAllExpenses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { groupId } = useParams();
+  const navigate = useNavigate()
+  
+  const { groupId } = useParams();  
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +30,19 @@ const Expenses = () => {
       .catch((error) => console.error(error));
   };
 
+  
+  const deleteCurrentGroup= async() => {
+    const pro = groupId
+    await fetch(`http://localhost:3333/group/delete/`+ pro,{
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(()=>navigate(`/groups`))
+      .catch((error) => {
+        console.error(error);
+      })
+  }
   const allExpensesOnGroup = async () => {
     setLoading(true);
     await fetch(`http://localhost:3333/group/${groupId}/expenses`)
@@ -42,7 +58,7 @@ const Expenses = () => {
 
   return (
     <>
-      <GeneralNavbar fieldHeader="All expenses" className=" text-2xl" />
+      <GeneralNavbar fieldHeader="Showing expense on Group"  className=" text-2xl" />
       <div className="flex justify-between">
         <div>
           {
@@ -68,6 +84,7 @@ const Expenses = () => {
         </div>
         <div>
           <button
+          onClick={deleteCurrentGroup}
             className="text-white bg-red-700 uppercase hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700  dark:red:ring-green-800"
           >
             Delete Group

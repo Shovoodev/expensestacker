@@ -5,7 +5,6 @@ const productSchema = new mongoose.Schema({
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
   expense_id: { type: String, required: true },
-  group_id: { type: String, required: true },
   created_at: { type: Date, default: Date.now },
 });
 export const productModel = mongoose.model("Product", productSchema);
@@ -18,4 +17,4 @@ export const createProduct = (values: Record<string, any>) =>
 export const deleteProductById = (id: string) =>
   productModel.findByIdAndDelete({ _id: id });
 export const updateProductById = (id: string, values: Record<string, any>) =>
-  productModel.findByIdAndUpdate(id, values);
+  productModel.findByIdAndUpdate(id, values );

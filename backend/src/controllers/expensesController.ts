@@ -1,5 +1,5 @@
 import express from 'express'
-import { createExpenses, getExpenses, getExpensesById } from './../db/expenses';
+import { createExpenses, deleteExpensesById, getExpenses, getExpensesById } from './../db/expenses';
 import { getGroupById } from './../db/group';
 
 export const registerExpenceOnGroup = async (
@@ -48,5 +48,22 @@ export const registerExpenceOnGroup = async (
     } catch (error) {
       console.log(error);
       res.status(400).json({ error: "Failed to fetch expenses" });
+    }
+  };
+  
+  export const deleteExpense = async (
+    req: express.Request,
+    res: express.Response
+  ): Promise<any> => {
+    try {
+      const { expenseId } = req.params;
+      console.log({expenseId});
+      
+      const deleted = await deleteExpensesById(expenseId);
+  
+      return res.status(200).json(deleted);
+    } catch (error) {
+      console.log(error);
+      return res.status(400);
     }
   };

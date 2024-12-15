@@ -8,7 +8,6 @@ import morgan from "morgan";
 import http from "http";
 import router from "./router";
 import dotenv from "dotenv";
-import { register } from "../src/controllers/authController";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -21,6 +20,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(express.json());
 app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());

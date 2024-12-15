@@ -3,17 +3,18 @@ import {
   createProduct,
   getProducts,
   getProductByExpenseId,
+  updateProductById,
 } from "./../db/product";
 import { deleteProductById } from "./../db/product";
 import { getExpensesById } from "./../db/expenses";
-import { getGroupById } from "./../db/group";
 
 export const registerProductOnExpenses = async (
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
   try {
-    const { groupId , expenseId } = req.params;
+    const { expenseId } = req.params;
+    
     const { name, quantity, price } = req.body;
     if (!name || !quantity || !price) {
       return res.status(400);
@@ -24,16 +25,10 @@ export const registerProductOnExpenses = async (
     if (!expense) {
       return res.status(404).json({ error: "Expense not found" });
     }
-    const group = await getGroupById(groupId);
-
-    if (!group) {
-      return res.status(404).json({ error: "Group not found" });
-    }
     const product = await createProduct({
       name,
       quantity,
       price,
-      group_id : groupId,
       expense_id: expenseId
     });
     return res.status(200).json(product);
@@ -43,27 +38,36 @@ export const registerProductOnExpenses = async (
   }
 };
 
-export const getAllProducts = async (
+export const getExpenseProducts = async (
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
+  const { expenseId  } = req.params;
+  const expense = await getExpensesById(expenseId);
+    
+
+  if (!expense) {
+    return res.status(404).json({ error: "Expense not found" });
+  }
   try {
-    const products = await getProducts();
-    return res.status(200).json(products).end();
+
+    const products = await getProductByExpenseId(expenseId);
+    
+    return res.status(200).json(products)
   } catch (error) {
     console.log(error);
     res.status(400);
   }
 };
-
 export const deleteProduct = async (
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
   try {
-    const { id } = req.params;
-
-    const deleted = await deleteProductById(id);
+    const { productId } = req.params;
+    console.log({productId});
+    
+    const deleted = await deleteProductById(productId);
 
     return res.status(200).json(deleted);
   } catch (error) {
@@ -71,31 +75,28 @@ export const deleteProduct = async (
     return res.status(400);
   }
 };
-export const getExpenseProducts = async (
+
+export const updateProduct = async (
   req: express.Request,
   res: express.Response
-): Promise<any> => {
-  const { expenseId , groupId } = req.params;
-  
-  const expense = await getExpensesById(expenseId);
-    
-
-  if (!expense) {
-    return res.status(404).json({ error: "Expense not found" });
-  }
-  const group = await getGroupById(groupId);
-
-  if (!group) {
-    return res.status(404).json({ error: "Group not found" });
-  }
-
+): Promise<any> => { 
   try {
-
-    const products = await getProductByExpenseId(expenseId);
+  const { productId } = req.params
+  const { name, quantity, price } = req.body;
+  console.log({name , quantity , price});
+    console.log({productId});
     
-    return res.status(200).json(products).end();
-  } catch (error) {
-    console.log(error);
-    res.status(400);
+    if (!name || !quantity || !price) {
+      return res.status(400);
+    }
+
+    const update = await updateProductById(productId , { name, quantity, price })
+    if(update) {
+     return  res.status(200).json(update)
+    }
   }
-};
+    catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "An error occurred while updating the product" });
+    }
+}

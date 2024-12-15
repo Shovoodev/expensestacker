@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink } from "react-router";
 
 const ExpenseButton = ({
-  groupId,
   expenseId,
   expensename,
   className,
@@ -20,7 +19,7 @@ const ExpenseButton = ({
           className
         }
       >
-        <NavLink to={`/group/${groupId}/expense/${expenseId}/products`}>
+        <NavLink to={`/expense/${expenseId}/products`}>
           {expensename}
         </NavLink>
       </button>

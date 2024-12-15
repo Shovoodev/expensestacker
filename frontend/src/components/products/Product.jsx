@@ -4,28 +4,30 @@ import Button from "../ui/Button";
 import ProductButton from "./ProductButton";
 import GeneralNavbar from "../main/GeneralNavbar";
 import { useUser } from "../hook/use-user";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
+import { useproduct } from "../hook/use-product";
 const Product = () => {
+  const{ allProducts, setAllProducts} = useproduct()
   const { user } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { groupId , expenseId } = useParams()
+  const { expenseId } = useParams()
+  
   const [newProduct, setNewProduct] = useState({
     name: "",
     quantity: "",
     price: "",
   });
   const [loading , setLoading] = useState(false)
-  const [product, setProduct] = useState();
-   
+  const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
     registerProductOnExpenses();
   };
   const registerProductOnExpenses = async () => {
     await fetch(
-      `http://localhost:3333/group/${groupId}/expense/${expenseId}/product/register`,
+      `http://localhost:3333/expense/${expenseId}/product/register`,
       {
-        credentials: "include",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,34 +36,30 @@ const Product = () => {
       }
     )
       .then((data) => {
-        setProduct(data);
-      }).then(()=> getAllProducts()).then(()=> setIsModalOpen(false))
+        setAllProducts(data);
+      }).then(()=> setAllProducts()).then(()=> setIsModalOpen(false))
       .catch((error) => {
         console.error(error);
       })
   };
-  const getAllProducts = () => {
-    fetch(`http://localhost:3333/group/${groupId}/expense/${expenseId}/products`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProduct(data);
-      })
+  const deleteCurrentExpenses= async() => {
+    const pro = expenseId
+    await fetch(`http://localhost:3333/expense/delete/`+ pro,{
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(()=>navigate(`/groups`))
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        console.error(error);
+      })
+  }
 
   useEffect(() => {
-    getAllProducts()
-
-  }, []);
-
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   setAllProducts();
-  //   setLoading(false);
-  // }, [setNewProduct, setAllProducts]);
+    setLoading(true);
+    setAllProducts();
+    setLoading(false);
+  }, [setNewProduct, setAllProducts]);
   return (
     <>
       <GeneralNavbar  fieldHeader="All products of " client={user?.username}/>
@@ -111,6 +109,7 @@ const Product = () => {
           )}
           <div>
           <button
+          onClick={deleteCurrentExpenses}
             className="text-white bg-red-700 uppercase hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700  dark:red:ring-green-800"
           >
             Delete Expense
@@ -138,11 +137,10 @@ const Product = () => {
             <tbody className="ml-9">
               {loading ? (
           <p>Loading...</p>
-        ) : product && product.length > 0 ? (
-          product.map(({ _id, groupId, name, price, quantity }) => {
+        ) : allProducts && allProducts.length > 0 ? (
+          allProducts.map(({ _id, groupId, name, price, quantity }) => {
             return (
               <ProductButton
-                        deletedProduct={setProduct}
                         key={_id}
                         productId={_id}
                         groupId={groupId}
