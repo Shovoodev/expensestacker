@@ -1,5 +1,5 @@
 import express from 'express'
-import { createExpenses, deleteExpensesById, getExpenses, getExpensesById } from './../db/expenses';
+import { createExpenses, deleteExpensesById, getExpenses, getExpensesById, updateExpensesById } from './../db/expenses';
 import { getGroupById } from './../db/group';
 
 export const registerExpenceOnGroup = async (
@@ -67,3 +67,23 @@ export const registerExpenceOnGroup = async (
       return res.status(400);
     }
   };
+  export const updateExpenseName = async (
+    req: express.Request,
+    res: express.Response
+  ): Promise<any> => { 
+    try {
+    const { expenseId } = req.params
+    const { expensename } = req.body;
+      if (!expensename ) {
+        return res.status(400);
+      }
+      const update = await updateExpensesById(expenseId , { expensename })
+      if(update) {
+       return  res.status(200).json(update)
+      }
+    }
+      catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "An error occurred while updating the expense" });
+      }
+  }

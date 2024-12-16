@@ -4,6 +4,7 @@ import {
   getProducts,
   getProductByExpenseId,
   updateProductById,
+  getProductById,
 } from "./../db/product";
 import { deleteProductById } from "./../db/product";
 import { getExpensesById } from "./../db/expenses";
@@ -14,13 +15,12 @@ export const registerProductOnExpenses = async (
 ): Promise<any> => {
   try {
     const { expenseId } = req.params;
-    
+
     const { name, quantity, price } = req.body;
     if (!name || !quantity || !price) {
       return res.status(400);
     }
     const expense = await getExpensesById(expenseId);
-    
 
     if (!expense) {
       return res.status(404).json({ error: "Expense not found" });
@@ -29,7 +29,7 @@ export const registerProductOnExpenses = async (
       name,
       quantity,
       price,
-      expense_id: expenseId
+      expense_id: expenseId,
     });
     return res.status(200).json(product);
   } catch (error) {
@@ -42,18 +42,16 @@ export const getExpenseProducts = async (
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
-  const { expenseId  } = req.params;
+  const { expenseId } = req.params;
   const expense = await getExpensesById(expenseId);
-    
 
   if (!expense) {
     return res.status(404).json({ error: "Expense not found" });
   }
   try {
-
     const products = await getProductByExpenseId(expenseId);
-    
-    return res.status(200).json(products)
+
+    return res.status(200).json(products);
   } catch (error) {
     console.log(error);
     res.status(400);
@@ -65,8 +63,8 @@ export const deleteProduct = async (
 ): Promise<any> => {
   try {
     const { productId } = req.params;
-    console.log({productId});
-    
+    console.log({ productId });
+
     const deleted = await deleteProductById(productId);
 
     return res.status(200).json(deleted);
@@ -79,24 +77,48 @@ export const deleteProduct = async (
 export const updateProduct = async (
   req: express.Request,
   res: express.Response
-): Promise<any> => { 
+): Promise<any> => {
   try {
-  const { productId } = req.params
-  const { name, quantity, price } = req.body;
-  console.log({name , quantity , price});
-    console.log({productId});
-    
+    const { productId } = req.params;
+    const { name, quantity, price } = req.body;
+    console.log({ name, quantity, price });
+    console.log({ productId });
+
     if (!name || !quantity || !price) {
       return res.status(400);
     }
 
-    const update = await updateProductById(productId , { name, quantity, price })
-    if(update) {
-     return  res.status(200).json(update)
+    const update = await updateProductById(productId, {
+      name,
+      quantity,
+      price,
+    });
+    console.log({ update });
+
+    if (update) {
+      return res.status(200).json(update);
     }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ error: "An error occurred while updating the product" });
   }
-    catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: "An error occurred while updating the product" });
-    }
-}
+};
+
+export const getSinglieProduct = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  const { productId } = req.params;
+  console.log({ productId });
+
+  try {
+    const product = await getProductById(productId);
+
+    return res.status(200).json(product);
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+  }
+};

@@ -12,7 +12,7 @@ const User = () => {
           <NavLink to={`/groups`}>groups</NavLink>
         </button>
         <button className="flex ml-[5%] items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
-          <NavLink to="/">Members</NavLink>
+          <NavLink to="/members">Members</NavLink>
         </button>
       </div>
     </>

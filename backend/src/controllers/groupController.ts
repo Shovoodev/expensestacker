@@ -5,6 +5,7 @@ import {
   deleteGroupById,
   getGroupById,
   getGroups,
+  updateGroupById,
 } from "./../db/group";
 import { getUserById } from "./../db/user";
 export const registerUserGroup = async (
@@ -87,3 +88,24 @@ export const delteteGroup = async (
     return res.status(400);
   }
 };
+
+  export const updateGroupName = async (
+    req: express.Request,
+    res: express.Response
+  ): Promise<any> => { 
+    try {
+    const { groupId } = req.params
+    const { name } = req.body;
+      if (!name ) {
+        return res.status(400);
+      }
+      const update = await updateGroupById(groupId , { name })
+      if(update) {
+       return  res.status(200).json(update)
+      }
+    }
+      catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "An error occurred while updating the group" });
+      }
+  }

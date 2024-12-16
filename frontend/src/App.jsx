@@ -8,7 +8,9 @@ import Product from "./components/products/Product";
 import Expenses from "./components/expenses/Expenses";
 import { useUser } from "./components/hook/use-user";
 import { useEffect, useState } from "react";
-import { Navigate} from 'react-router-dom'
+import { Navigate } from "react-router-dom";
+import EditProduct from "./components/products/EditProduct";
+import GroupMembers from "./components/Auth/members/GroupMembers";
 
 function App() {
   //   const { user } = useUser();
@@ -45,14 +47,16 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/members" element={<GroupMembers />} />
+        <Route path="/expense/:expenseId/products" element={<Product />} />
         <Route
-          path="/expense/:expenseId/products"
-          element={<Product />}
+          path="/expense/:expenseId/product/:productId"
+          element={<EditProduct />}
         />
         <Route path="/group/:groupId/expenses" element={<Expenses />} />
         <Route path="/groups" element={<Group />} />
-        <Route path="/user"  element={< User/> }/>
+        <Route path="/user" element={<User />} />
       </Routes>
     </>
   );

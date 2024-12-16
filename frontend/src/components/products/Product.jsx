@@ -5,75 +5,78 @@ import ProductButton from "./ProductButton";
 import GeneralNavbar from "../main/GeneralNavbar";
 import { useUser } from "../hook/use-user";
 import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router";
+import { NavLink, useParams } from "react-router";
 import { useproduct } from "../hook/use-product";
 const Product = () => {
-  const{ allProducts, setAllProducts} = useproduct()
+  const { allProducts, setAllProducts } = useproduct();
   const { user } = useUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { expenseId } = useParams()
-  
+  const { expenseId } = useParams();
+
+  const [product, setProduct] = useState({ name: "", price: "", quantity: "" });
   const [newProduct, setNewProduct] = useState({
     name: "",
     quantity: "",
     price: "",
   });
-  const [loading , setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    registerProductOnExpenses();
-  };
-  const registerProductOnExpenses = async () => {
-    await fetch(
-      `http://localhost:3333/expense/${expenseId}/product/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newProduct),
-      }
-    )
+    await fetch(`http://localhost:3333/expense/${expenseId}/product/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProduct),
+    })
       .then((data) => {
         setAllProducts(data);
-      }).then(()=> setAllProducts()).then(()=> setIsModalOpen(false))
+      })
+      .then(() => setAllProducts(allProducts))
+      .then(() => setIsModalOpen(false))
       .catch((error) => {
         console.error(error);
-      })
+      });
   };
-  const deleteCurrentExpenses= async() => {
-    const pro = expenseId
-    await fetch(`http://localhost:3333/expense/delete/`+ pro,{
+  const deleteCurrentExpenses = async () => {
+    const pro = expenseId;
+    await fetch(`http://localhost:3333/expense/delete/` + pro, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-    }).then(()=>navigate(`/groups`))
+    })
+      .then(() => navigate(`/groups`))
       .catch((error) => {
         console.error(error);
-      })
-  }
+      });
+  };
+
+  const updateOption = () => {
+    setIsModalOpen(true);
+    setUpdateMode(true);
+  };
 
   useEffect(() => {
     setLoading(true);
     setAllProducts();
+    setAllProducts(newProduct);
     setLoading(false);
   }, [setNewProduct, setAllProducts]);
   return (
     <>
-      <GeneralNavbar  fieldHeader="All products of " client={user?.username}/>
+      <GeneralNavbar fieldHeader="All products of " client={user?.username} />
       <div className="flex justify-center flex-col space-y-6 md:space-y-8">
-      <div className="flex justify-between">
-        <div>
-
-          <button
-            className="w-42 max-w-xs md:max-w-md p-1 ml-12 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
-            onClick={() => setIsModalOpen(!isModalOpen)}
-          >
-            {!isModalOpen ? <p> Add New Product</p> : <p> Minimize </p>}
-          </button>
-        </div>
+        <div className="flex justify-between">
+          <div>
+            <button
+              className="w-42 max-w-xs md:max-w-md p-1 ml-12 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+              onClick={() => setIsModalOpen(!isModalOpen)}
+            >
+              {!isModalOpen ? <p> Add New Product</p> : <p> Minimize </p>}
+            </button>
+          </div>
           {isModalOpen && (
             <div className=" ml-8 bg-gray-100 flex w-80 flex-col items-center justify-center  max-w-lg  rounded-lg shadow-lg p-6">
               <form
@@ -101,20 +104,21 @@ const Product = () => {
                 <Button
                   className="mt-6 mb-2  w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
                   type="submit"
+                  onClick={() => setIsModalOpen(true)}
                 >
-                  ADD EXPENSES
+                  ADD PRODUCT
                 </Button>
               </form>
             </div>
           )}
           <div>
-          <button
-          onClick={deleteCurrentExpenses}
-            className="text-white bg-red-700 uppercase hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700  dark:red:ring-green-800"
-          >
-            Delete Expense
-          </button>
-        </div>
+            <button
+              onClick={deleteCurrentExpenses}
+              className="text-white bg-red-700 uppercase hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700  dark:red:ring-green-800"
+            >
+              Delete Expense
+            </button>
+          </div>
         </div>
         <div className="flex flex-col ml-8 gap-4 w-[52%] max-w-4xl  bg-white rounded-lg p-4">
           <table className=" w-[50%] table-auto border-collapse border border-gray-300">
@@ -136,28 +140,30 @@ const Product = () => {
             </thead>
             <tbody className="ml-9">
               {loading ? (
-          <p>Loading...</p>
-        ) : allProducts && allProducts.length > 0 ? (
-          allProducts.map(({ _id, groupId, name, price, quantity }) => {
-            return (
-              <ProductButton
+                <p>Loading...</p>
+              ) : allProducts && allProducts.length > 0 ? (
+                allProducts.map(({ _id, expenseId, name, price, quantity }) => {
+                  const productId = _id;
+                  return (
+                    <>
+                      <ProductButton
                         key={_id}
                         productId={_id}
-                        groupId={groupId}
+                        expenseId={expenseId}
                         name={name}
                         price={price}
                         quantity={quantity}
+                        children="Edit"
                       ></ProductButton>
-            );
-          })
-        ) : (
-          <p>No product found.</p>
-        )}
+                    </>
+                  );
+                })
+              ) : (
+                <p>No product found.</p>
+              )}
             </tbody>
           </table>
         </div>
-        
-
       </div>
     </>
   );
