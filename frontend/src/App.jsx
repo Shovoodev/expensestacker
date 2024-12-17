@@ -48,7 +48,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/members" element={<GroupMembers />} />
+        <Route path="/users" element={<GroupMembers />} />
         <Route path="/expense/:expenseId/products" element={<Product />} />
         <Route
           path="/expense/:expenseId/product/:productId"

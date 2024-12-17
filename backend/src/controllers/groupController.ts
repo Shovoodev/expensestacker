@@ -7,14 +7,13 @@ import {
   getGroups,
   updateGroupById,
 } from "./../db/group";
-import { getUserById } from "./../db/user";
+import { createMember } from "./../db/membership";
 export const registerUserGroup = async (
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
   try {
-    const { userId } = req.params; //ai id ta always null ase
-    console.log(userId);
+    const { userId } = req.params;
 
     const { name } = req.body;
     if (!name) {
@@ -24,9 +23,15 @@ export const registerUserGroup = async (
       name,
       owner_id: userId,
     });
-    console.log({ group });
 
-    return res.status(200).json(group);
+    const member = await createMember({
+      userId: userId,
+      groupId: group._id,
+      role: "admin",
+      isActive: true,
+    });
+
+    return res.status(200).json({ ...group, member });
   } catch (error) {
     console.log(error);
     return res.status(400);
@@ -61,6 +66,8 @@ export const getGroupsByUser = async (
     const user = req.identity;
 
     const data = await getGroups(user.id);
+    console.log({ data });
+
     if (data) {
       return res.status(200).json(data);
     }
@@ -89,23 +96,24 @@ export const delteteGroup = async (
   }
 };
 
-  export const updateGroupName = async (
-    req: express.Request,
-    res: express.Response
-  ): Promise<any> => { 
-    try {
-    const { groupId } = req.params
+export const updateGroupName = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const { groupId } = req.params;
     const { name } = req.body;
-      if (!name ) {
-        return res.status(400);
-      }
-      const update = await updateGroupById(groupId , { name })
-      if(update) {
-       return  res.status(200).json(update)
-      }
+    if (!name) {
+      return res.status(400);
     }
-      catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "An error occurred while updating the group" });
-      }
+    const update = await updateGroupById(groupId, { name });
+    if (update) {
+      return res.status(200).json(update);
+    }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ error: "An error occurred while updating the group" });
   }
+};

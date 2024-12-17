@@ -3,7 +3,7 @@ import Input from "../ui/Input";
 import Button from "../ui/Button";
 import GeneralNavbar from "../main/GeneralNavbar";
 import ExpenseButton from "./ExpenseButton";
-import { useParams } from "react-router";
+import { NavLink, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import GroupUsers from "../group/GroupUsers";
 import { useUser } from "../hook/use-user";
@@ -13,15 +13,15 @@ const Expenses = () => {
   const [printAllExpenses, setPrintAllExpenses] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
-  const {user} = useUser()
-  const [groupUser , setGroupoUser] = useState("")
-  const { groupId } = useParams();  
-  
+  const navigate = useNavigate();
+  const { user } = useUser();
+  const [groupUser, setGroupoUser] = useState("");
+  const { groupId } = useParams();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     await fetch(`http://localhost:3333/group/${groupId}/expense/register`, {
-      credentials : "include",
+      credentials: "include",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,19 +32,19 @@ const Expenses = () => {
       .catch((error) => console.error(error));
   };
 
-  
-  const deleteCurrentGroup= async() => {
-    const pro = groupId
-    await fetch(`http://localhost:3333/group/delete/`+ pro,{
+  const deleteCurrentGroup = async () => {
+    const pro = groupId;
+    await fetch(`http://localhost:3333/group/delete/` + pro, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-    }).then(()=>navigate(`/groups`))
+    })
+      .then(() => navigate(`/groups`))
       .catch((error) => {
         console.error(error);
-      })
-  }
+      });
+  };
   const allExpensesOnGroup = async () => {
     setLoading(true);
     await fetch(`http://localhost:3333/group/${groupId}/expenses`)
@@ -60,33 +60,32 @@ const Expenses = () => {
 
   return (
     <>
-      <GeneralNavbar fieldHeader="Showing expense on Group"  className=" text-2xl" />
+      <GeneralNavbar
+        fieldHeader="Showing expense on Group"
+        className=" text-2xl"
+      />
       <div className="flex justify-between">
         <div>
-          {
-          loading ? (
+          {loading ? (
             <p>Loading...</p>
-          ) : 
-          printAllExpenses && printAllExpenses.length > 0 ? (
+          ) : printAllExpenses && printAllExpenses.length > 0 ? (
             printAllExpenses.map(({ _id, expensename }) => {
               return (
                 <ExpenseButton
-                 groupId={groupId}
-                 expenseId={_id}
+                  groupId={groupId}
+                  expenseId={_id}
                   key={_id}
                   expensename={expensename}
                 ></ExpenseButton>
               );
             })
-          ) 
-          : (
+          ) : (
             <p>No expense found.</p>
-          )
-          }
+          )}
         </div>
         <div>
           <button
-          onClick={deleteCurrentGroup}
+            onClick={deleteCurrentGroup}
             className="text-white bg-red-700 uppercase hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700  dark:red:ring-green-800"
           >
             Delete Group
@@ -115,24 +114,38 @@ const Expenses = () => {
           </form>
         </div>
       )}
-      
-      <div className='text-black w-full flex h-full ' >
-        
-  <div className=' fixed right-[100px]  w-[300px]  border ' >
-  <h5 className="mb-1 p-2 text-center text-xl font-medium leading-tight ">
-          Group Members
-        </h5>
-        {loading ? (
-          <p>Loading...</p>
-        ) : groupUser && groupUser.length > 0 ? (
-          groupUser.map(({ _id, username }) => {
-            return <GroupUsers client={user?.username} key={_id}> {username} </GroupUsers>;
-          })
-        ) : (
-          <p className=" text-center text-xl">No Members in this Group </p>
-        )}
-  </div>
-</div>
+
+      <div className="text-black w-full flex h-full ">
+        <div className=" fixed right-[100px] shadow-lg rounded w-[300px]  border ">
+          <h5 className="mb-1 p-2 text-center text-xl font-medium leading-tight ">
+            Group Members
+          </h5>
+          {loading ? (
+            <p>Loading...</p>
+          ) : groupUser && groupUser.length > 0 ? (
+            groupUser.map(({ _id, username }) => {
+              return (
+                <GroupUsers client={user?.username} key={_id}>
+                  {" "}
+                  {username}{" "}
+                </GroupUsers>
+              );
+            })
+          ) : (
+            <p className=" text-center text-xl">No Members in this Group </p>
+          )}
+          <div className="flex justify-center  mt-4 mb-3 md:mt-6">
+            <button>
+              <NavLink
+                to="/"
+                className="inline-flex  items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
+              >
+                Add Member in Group
+              </NavLink>
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

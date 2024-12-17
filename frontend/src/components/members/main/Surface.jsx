@@ -4,6 +4,7 @@ import { useUser } from "../../hook/use-user";
 
 const Surface = () => {
   const { user } = useUser();
+
   const [users, setUsers] = useState({ name: "" });
   const [loading, setLoading] = useState(false);
   const allUsers = async () => {

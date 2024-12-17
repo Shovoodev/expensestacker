@@ -3,6 +3,8 @@ import { useGroup } from "../hook/use-group";
 import { NavLink, useParams } from "react-router";
 
 const GroupButton = ({ groupId ,name, className, type = "button", onClick }) => {
+  const [updateGroup , setUpdateGroup] = useState("")
+  const [updateMode , setUpdateMode] = useState(false)
   const { setAllGroups , allGroups } = useGroup();
   const handleDelete = async () => {
     await fetch("http://localhost:3333/group/delete/" + groupId, {

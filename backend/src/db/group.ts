@@ -4,6 +4,7 @@ const groupSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: false,
   },
   owner_id: { type: String, required: true },
   users: { type: Array },
@@ -13,7 +14,7 @@ export const groupModel = mongoose.model("GROUPS", groupSchema);
 export const getOwner = (owner_id: string) => groupModel.findOne({ owner_id });
 export const getGroups = (userId: string) =>
   groupModel.find({ owner_id: userId });
-export const getGroupById = (groups_id: string) =>
+export const getGroupById = (groups_id: any) =>
   groupModel.findById(groups_id);
 export const createGroup = (values: Record<string, any>) =>
   new groupModel(values).save().then((user) => user.toObject());
