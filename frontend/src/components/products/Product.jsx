@@ -66,7 +66,7 @@ const Product = () => {
   }, [setNewProduct, setAllProducts]);
   return (
     <>
-      <GeneralNavbar fieldHeader="All products of " client={user?.username} />
+      <GeneralNavbar fieldHeader="Expense done by Member " client={user?.username} />
       <div className="flex justify-center flex-col space-y-6 md:space-y-8">
         <div className="flex justify-between">
           <div>
@@ -164,6 +164,7 @@ const Product = () => {
             </tbody>
           </table>
         </div>
+        <div className="flex items-center justify-center text-2xl">Total : </div>
       </div>
     </>
   );

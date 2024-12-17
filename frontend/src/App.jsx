@@ -10,7 +10,7 @@ import { useUser } from "./components/hook/use-user";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import EditProduct from "./components/products/EditProduct";
-import GroupMembers from "./components/Auth/members/GroupMembers";
+import GroupMembers from "./components/members/GroupMembers";
 
 function App() {
   //   const { user } = useUser();

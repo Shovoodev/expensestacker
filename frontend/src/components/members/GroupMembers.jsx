@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import GeneralNavbar from "../../main/GeneralNavbar";
+import GeneralNavbar from "../main/GeneralNavbar";
+import UserSidebar from "./main/UserSidebar";
 
 const GroupMembers = () => {
   const [users, setUsers] = useState({ name: "" });
@@ -16,7 +17,10 @@ const GroupMembers = () => {
   }, []);
   return (
     <>
-      <GeneralNavbar />
+      <UserSidebar/>
+      <div>
+        <h1>List of all Members</h1>
+      </div>
       <div className=" flex-col justify-center gap-5">
         {loading ? (
           <p>Loading...</p>

@@ -4,8 +4,9 @@ import Button from "../ui/Button";
 import GeneralNavbar from "../main/GeneralNavbar";
 import ExpenseButton from "./ExpenseButton";
 import { useParams } from "react-router";
-
 import { useNavigate } from "react-router-dom";
+import GroupUsers from "../group/GroupUsers";
+import { useUser } from "../hook/use-user";
 
 const Expenses = () => {
   const [newExpense, setNewExpense] = useState({ expensename: "" });
@@ -13,7 +14,8 @@ const Expenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
-  
+  const {user} = useUser()
+  const [groupUser , setGroupoUser] = useState("")
   const { groupId } = useParams();  
   
   const handleSubmit = async (e) => {
@@ -113,6 +115,24 @@ const Expenses = () => {
           </form>
         </div>
       )}
+      
+      <div className='text-black w-full flex h-full ' >
+        
+  <div className=' fixed right-[100px]  w-[300px]  border ' >
+  <h5 className="mb-1 p-2 text-center text-xl font-medium leading-tight ">
+          Group Members
+        </h5>
+        {loading ? (
+          <p>Loading...</p>
+        ) : groupUser && groupUser.length > 0 ? (
+          groupUser.map(({ _id, username }) => {
+            return <GroupUsers client={user?.username} key={_id}> {username} </GroupUsers>;
+          })
+        ) : (
+          <p className=" text-center text-xl">No Members in this Group </p>
+        )}
+  </div>
+</div>
     </>
   );
 };

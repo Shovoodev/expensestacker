@@ -11,7 +11,7 @@ const GeneralNavbar = ({ fieldHeader, className, client }) => {
           "bg-[#f8f9fa] flex justify-between gap-4 mb-4 px-4 py-3 " + className
         }
       >
-        <div>
+        <div className={className}>
           {fieldHeader} {client}
         </div>
         <div className="flex gap-3 ">

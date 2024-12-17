@@ -21,6 +21,7 @@ const LandingPage = () => {
               <button className="ml-4 border border-white px-6 py-3 rounded-md shadow text-white hover:bg-blue-700">
                 Learn More
               </button>
+
             </div>
           </div>
         </section>
