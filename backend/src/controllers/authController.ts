@@ -19,9 +19,6 @@ export const login = async (
       return res.status(403).json({ error: "User is not registered" });
     }
     const expectdHash = authentication(user.authentication.salt, password);
-    console.log(user);
-
-    console.log({ expectdHash });
 
     if (user.authentication.password !== expectdHash) {
       return res.status(403).json({ error: "email or password is wrong" });

@@ -66,7 +66,6 @@ export const getGroupsByUser = async (
     const user = req.identity;
 
     const data = await getGroups(user.id);
-    console.log({ data });
 
     if (data) {
       return res.status(200).json(data);
@@ -83,7 +82,6 @@ export const delteteGroup = async (
   console.log("here");
   try {
     const { groupId } = req.params;
-    console.log({ groupId });
 
     const deletedGroup = await deleteGroupById(groupId);
     if (!deletedGroup) {

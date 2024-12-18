@@ -3,7 +3,7 @@ import { useUser } from "../hook/use-user";
 import { NavLink } from "react-router";
 
 const GroupUsers = ({client}) => {
-  const {user} = useUser()
+ 
   return (
     <div className="block max-w-[18rem] rounded-lg bg-white text-left text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white">
       <div className="p-6">

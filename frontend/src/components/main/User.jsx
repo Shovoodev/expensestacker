@@ -1,7 +1,6 @@
 import { NavLink } from "react-router";
 import { useUser } from "../hook/use-user";
 import GeneralNavbar from "./GeneralNavbar";
-
 const User = () => {
   const { user } = useUser();
   return (

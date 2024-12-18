@@ -7,6 +7,7 @@ import { NavLink, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import GroupUsers from "../group/GroupUsers";
 import { useUser } from "../hook/use-user";
+import AddInGroup from "../members/main/AddInGroup";
 
 const Expenses = () => {
   const [newExpense, setNewExpense] = useState({ expensename: "" });
@@ -126,8 +127,7 @@ const Expenses = () => {
             groupUser.map(({ _id, username }) => {
               return (
                 <GroupUsers client={user?.username} key={_id}>
-                  {" "}
-                  {username}{" "}
+                  {username}
                 </GroupUsers>
               );
             })
@@ -143,6 +143,20 @@ const Expenses = () => {
                 Add Member in Group
               </NavLink>
             </button>
+            {/* {loading ? (
+            <p>Loading...</p>
+          ) : groupUser && groupUser.length > 0 ? (
+            groupUser.map(({ _id, username , groupId }) => {
+              groupId  = _id
+              return (
+                <AddInGroup groupId={groupId} client={user?.username} key={_id}>
+                  {username}
+                </AddInGroup>
+              );
+            })
+          ) : (
+            <p className=" text-center text-xl">No Members in this Group </p>
+          )} */}
           </div>
         </div>
       </div>

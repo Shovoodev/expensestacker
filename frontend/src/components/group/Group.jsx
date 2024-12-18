@@ -10,6 +10,9 @@ const Group = () => {
   const [allGroups, setAllGroups] = useState();
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
+  const getAllUsers = async() => {
+    
+  }
   const userGroups = async () => {
     await fetch(`http://localhost:3333/groups`, {
       credentials: "include",
