@@ -5,15 +5,14 @@ import ProductButton from "./ProductButton";
 import GeneralNavbar from "../main/GeneralNavbar";
 import { useUser } from "../hook/use-user";
 import { useNavigate } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 import { NavLink, useParams } from "react-router";
-import { useproduct } from "../hook/use-product";
 const Product = () => {
-  const { allProducts, setAllProducts } = useproduct();
   const { user } = useUser();
+  const [totalCost, setTotalCost] = useState(0);
+  const [allProducts, setAllProducts] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { expenseId } = useParams();
-
-  const [product, setProduct] = useState({ name: "", price: "", quantity: "" });
   const [newProduct, setNewProduct] = useState({
     name: "",
     quantity: "",
@@ -33,7 +32,7 @@ const Product = () => {
       .then((data) => {
         setAllProducts(data);
       })
-      .then(() => setAllProducts(allProducts))
+      .then(() => getAllProducts())
       .then(() => setIsModalOpen(false))
       .catch((error) => {
         console.error(error);
@@ -52,26 +51,44 @@ const Product = () => {
         console.error(error);
       });
   };
+  const getAllProducts = () => {
+    fetch(`http://localhost:3333/expense/${expenseId}/products`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAllProducts(data);
+      })
+      .then((data) => {
+        const total = data.reduce(
+          (sum, product) => sum + product.price * product.quantity,
+          0
+        );
+        console.log(`Total Cost: ${total}`);
+        setTotalCost(total);
+      })
 
-  const updateOption = () => {
-    setIsModalOpen(true);
-    setUpdateMode(true);
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
     setLoading(true);
-    setAllProducts();
-    setAllProducts(newProduct);
+    getAllProducts();
+    setAllProducts(allProducts);
+    setTotalCost();
     setLoading(false);
   }, [setNewProduct, setAllProducts]);
   return (
     <>
-      <GeneralNavbar fieldHeader="Expense done by Member " client={user?.username} />
+      <GeneralNavbar
+        fieldHeader="Expense done by Member "
+        client={user?.username}
+      />
       <div className="flex justify-center flex-col space-y-6 md:space-y-8">
         <div className="flex justify-between">
           <div>
             <button
-              className="w-42 max-w-xs md:max-w-md p-1 ml-12 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+              className="w-42 mt-3 max-w-xs md:max-w-md p-1 ml-12 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
               onClick={() => setIsModalOpen(!isModalOpen)}
             >
               {!isModalOpen ? <p> Add New Product</p> : <p> Minimize </p>}
@@ -111,12 +128,23 @@ const Product = () => {
               </form>
             </div>
           )}
-          <div>
+          <div className=" first-letter:text-teal-900 text-xl">
+            <p> This Below expense done by user {user?.username} </p>
+          </div>
+          <div className=" p-3 pt-1 float-end">
             <button
               onClick={deleteCurrentExpenses}
-              className="text-white bg-red-700 uppercase hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700  dark:red:ring-green-800"
+              className="text-white gap-3 hover:bg-red-700 bg-black font-medium text-sm px-7 py-2 text-center me-2 
+              flex items-center p-2 mt-7 rounded-full hover:scale-110 hover:text-white dark:text-white  dark:hover:bg-red-700 group
+              "
             >
-              Delete Expense
+              <Trash2
+                className=""
+                size={36}
+                strokeWidth={2.25}
+                absoluteStrokeWidth
+              />
+              <span> delete expense</span>
             </button>
           </div>
         </div>
@@ -164,7 +192,9 @@ const Product = () => {
             </tbody>
           </table>
         </div>
-        <div className="flex items-center justify-center text-2xl">Total : </div>
+        <div className="flex items-center justify-center text-2xl">
+          Total Spend on this Listing : {totalCost}
+        </div>
       </div>
     </>
   );

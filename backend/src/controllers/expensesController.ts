@@ -9,7 +9,6 @@ export const registerExpenceOnGroup = async (
     try {
       const { groupId } = req.params;
       const { expensename } = req.body;
-      console.log({groupId , expensename});
       
       if (!expensename ) {
         return res.status(400);
@@ -17,7 +16,7 @@ export const registerExpenceOnGroup = async (
       const group = await getGroupById(groupId);
   
       if (!group) {
-        return res.status(404).json({ error: "expense not found" });
+        return res.status(404).json({ error: "group not found" });
       }
       const expense = await createExpenses({
         expensename,
@@ -40,7 +39,6 @@ export const registerExpenceOnGroup = async (
     const {groupId }= req.params;
     try {
        const data = await getExpenses(groupId);
-       console.log(data);
        
           if (data) {
             return res.status(200).json(data);
@@ -57,7 +55,6 @@ export const registerExpenceOnGroup = async (
   ): Promise<any> => {
     try {
       const { expenseId } = req.params;
-      console.log({expenseId});
       
       const deleted = await deleteExpensesById(expenseId);
   

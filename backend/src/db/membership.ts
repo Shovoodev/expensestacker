@@ -20,9 +20,14 @@ const memberShipSchema = new mongoose.Schema({
   created_at: { type: Date, default: Date.now },
 });
 const memberModel = mongoose.model("MEMBERSHIP", memberShipSchema);
-export const getUsers = (group_Id: any) => memberModel.find(group_Id);
+export const getMembers = () => memberModel.find();
+export const getAllMembers = () => memberModel.find();
 export const createMember = (values: Record<string, any>) =>
   new memberModel(values).save().then((member) => member.toObject());
+export const updateGroupById = (id: string, values: Record<string, any>) =>
+  memberModel.findByIdAndUpdate(id, values);
+export const deleteUserFronGroupId = (userId: string) =>
+  memberModel.findByIdAndDelete({ _id: userId });
 export const findDuplicatedUsers = async () => {
   try {
     const result = await memberModel.aggregate([

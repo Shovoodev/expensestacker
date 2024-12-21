@@ -3,16 +3,22 @@ import { NavLink } from "react-router";
 import { Menu, MenuButton, MenuItems } from "@headlessui/react";
 import { useGroup } from "../../hook/use-group";
 
-const Profiles = ({ username }) => {
+const Profiles = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const { allGroups, setAllGroups } = useGroup();
-  const getUserGroups = () => {};
+  const getUserGroups = async(group) => {
+    const groupId = group._id 
+    const userId = user._id
+    console.log({groupId, userId});
+     await fetch(``)
+
+  };
   return (
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow ">
       <div className="flex justify-end px-4 pt-4"></div>
       <div className="flex flex-col items-center pb-10">
         <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-black">
-          {username}
+          {user.username}
         </h5>
         <div className="flex mt-4 md:mt-6">
           <Menu>
@@ -26,8 +32,16 @@ const Profiles = ({ username }) => {
               {loading ? (
                 <p>Loading...</p>
               ) : allGroups && allGroups.length > 0 ? (
-                allGroups.map(({ _id, name }) => {
-                  return <button className="flex p-2 items-center text-center " key={_id}>{name}</button>;
+                allGroups.map((group, idx) => {
+                  return (
+                    <button
+                      onClick={() => getUserGroups(group)}
+                      className="flex p-2 items-center text-center "
+                      key={idx}
+                    >
+                      {group.name}
+                    </button>
+                  );
                 })
               ) : (
                 <p>No groups found.</p>

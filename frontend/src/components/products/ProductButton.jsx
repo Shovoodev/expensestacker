@@ -43,7 +43,7 @@ const ProductButton = ({
         </td>
         <td className="px-8 py-2 border border-gray-200 text-gray-800">
           {" "}
-          {price}
+          {price}€
         </td>
         <td className="px-4 py-2 border border-gray-200 text-gray-800">
           {" "}

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Input from "../ui/Input";
-import Button from "../ui/Button";
-import GeneralNavbar from "../main/GeneralNavbar";
 import ExpenseButton from "./ExpenseButton";
+import { Trash2 } from "lucide-react";
+import GeneralNavbar from "../main/GeneralNavbar";
 import { NavLink, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
-import GroupUsers from "../group/GroupUsers";
 import { useUser } from "../hook/use-user";
-import AddInGroup from "../members/main/AddInGroup";
+import Sidebar from "../main/Sidebar";
+import UserGroup from "./UserGroup";
 
 const Expenses = () => {
   const [newExpense, setNewExpense] = useState({ expensename: "" });
@@ -16,37 +16,40 @@ const Expenses = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useUser();
-  const [groupUser, setGroupoUser] = useState("");
+  const [groupUser, setGroupUser] = useState([]);
   const { groupId } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await fetch(`http://localhost:3333/group/${groupId}/expense/register`, {
-      credentials: "include",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newExpense),
-    })
-      .then(() => allExpensesOnGroup())
-      .catch((error) => console.error(error));
+    try {
+      await fetch(`http://localhost:3333/group/${groupId}/expense/register`, {
+        credentials: "include",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newExpense),
+      }).then(() => {
+        allExpensesOnGroup();
+        setIsModalOpen(false);
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const deleteCurrentGroup = async () => {
-    const pro = groupId;
-    await fetch(`http://localhost:3333/group/delete/` + pro, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then(() => navigate(`/groups`))
-      .catch((error) => {
-        console.error(error);
+    try {
+      await fetch(`http://localhost:3333/group/delete/${groupId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
       });
+      navigate(`/groups`);
+    } catch (error) {
+      console.error(error);
+    }
   };
+
   const allExpensesOnGroup = async () => {
+    setLoading(true);
     setLoading(true);
     await fetch(`http://localhost:3333/group/${groupId}/expenses`)
       .then((res) => res.json())
@@ -58,107 +61,105 @@ const Expenses = () => {
   useEffect(() => {
     allExpensesOnGroup();
   }, []);
+  const getAllGroupUser = async () => {
+    try {
+      if (groupId) {
+        await fetch(`http://localhost:3333/${groupId}/members`, {
+          credentials: "include",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log({ data });
+
+            setGroupUser(data);
+          });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllGroupUser();
+  }, [groupId]);
 
   return (
     <>
-      <GeneralNavbar
-        fieldHeader="Showing expense on Group"
-        className=" text-2xl"
-      />
-      <div className="flex justify-between">
+      <GeneralNavbar />
+      <div className="flex relative">
         <div>
-          {loading ? (
-            <p>Loading...</p>
-          ) : printAllExpenses && printAllExpenses.length > 0 ? (
-            printAllExpenses.map(({ _id, expensename }) => {
-              return (
-                <ExpenseButton
-                  groupId={groupId}
-                  expenseId={_id}
-                  key={_id}
-                  expensename={expensename}
-                ></ExpenseButton>
-              );
-            })
-          ) : (
-            <p>No expense found.</p>
-          )}
+          <Sidebar />
         </div>
-        <div>
-          <button
-            onClick={deleteCurrentGroup}
-            className="text-white bg-red-700 uppercase hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700  dark:red:ring-green-800"
-          >
-            Delete Group
-          </button>
-        </div>
-      </div>
-      <button
-        className="flex justify-center mt-6 px-4 py-2 mb-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
-        onClick={() => setIsModalOpen(!isModalOpen)}
-      >
-        {!isModalOpen ? <p> Add New Expenses</p> : <p> Minimize </p>}
-      </button>
-      {isModalOpen && (
-        <div className="ml-8 bg-gray-100 flex w-80 flex-col mb-3 items-center justify-center">
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-2 w-[280px] md:flex md:justify-center mb-6 pt-4"
-          >
-            <Input
-              label="Your Expense Name"
-              onChange={(e) =>
-                setNewExpense({ ...newExpense, expensename: e.target.value })
-              }
-            />
-            <Button type="submit">ADD Expense</Button>
-          </form>
-        </div>
-      )}
-
-      <div className="text-black w-full flex h-full ">
-        <div className=" fixed right-[100px] shadow-lg rounded w-[300px]  border ">
-          <h5 className="mb-1 p-2 text-center text-xl font-medium leading-tight ">
-            Group Members
-          </h5>
-          {loading ? (
-            <p>Loading...</p>
-          ) : groupUser && groupUser.length > 0 ? (
-            groupUser.map(({ _id, username }) => {
-              return (
-                <GroupUsers client={user?.username} key={_id}>
-                  {username}
-                </GroupUsers>
-              );
-            })
-          ) : (
-            <p className=" text-center text-xl">No Members in this Group </p>
-          )}
-          <div className="flex justify-center  mt-4 mb-3 md:mt-6">
-            <button>
-              <NavLink
-                to="/"
-                className="inline-flex  items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700"
+        <div className="flex-1 p-5">
+          <div className="flex justify-between items-start">
+            <div className="flex flex-wrap gap-3">
+              {loading ? (
+                <p>Loading...</p>
+              ) : printAllExpenses.length > 0 ? (
+                printAllExpenses.map(({ _id, expensename }) => (
+                  <ExpenseButton
+                    groupId={groupId}
+                    expenseId={_id}
+                    key={_id}
+                    expensename={expensename}
+                  />
+                ))
+              ) : (
+                <p>No expense found.</p>
+              )}
+              <button
+                className="rounded-full shadow-lg text-sm border-2 border-primary px-6 py-2 hover:text-white hover:bg-gray-800 font-medium uppercase transition"
+                onClick={() => setIsModalOpen(!isModalOpen)}
               >
-                Add Member in Group
-              </NavLink>
-            </button>
-            {/* {loading ? (
-            <p>Loading...</p>
-          ) : groupUser && groupUser.length > 0 ? (
-            groupUser.map(({ _id, username , groupId }) => {
-              groupId  = _id
-              return (
-                <AddInGroup groupId={groupId} client={user?.username} key={_id}>
-                  {username}
-                </AddInGroup>
-              );
-            })
-          ) : (
-            <p className=" text-center text-xl">No Members in this Group </p>
-          )} */}
+                {!isModalOpen ? "Add Expenses" : "Minimize"}
+              </button>
+            </div>
+            {isModalOpen && (
+              <div className="absolute top-[20%] left-[50%] transform -translate-x-1/2 bg-gray-100 flex w-[90%] lg:w-[50%] flex-col items-center justify-center max-w-lg rounded-lg shadow-lg p-6">
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col gap-4 w-full max-w-xs"
+                >
+                  <Input
+                    label="Your Expense Name"
+                    onChange={(e) =>
+                      setNewExpense({
+                        ...newExpense,
+                        expensename: e.target.value,
+                      })
+                    }
+                  />
+                  <button
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg transition"
+                    type="submit"
+                  >
+                    Add Expense
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
+          <div>
+            <h1 className=" p-4 text-xl"> Members on this Group </h1>
+
+            {loading ? (
+              <p>Loading...</p>
+            ) : groupUser && groupUser.length > 0 ? (
+              groupUser.map(({ _id, username }) => {
+                return <UserGroup username={username} key={_id}></UserGroup>;
+              })
+            ) : (
+              <p className=" text-center text-xl">No Members in this Group</p>
+            )}
           </div>
         </div>
+        <button
+          onClick={deleteCurrentGroup}
+          className="absolute flex items-center px-6 py-2 top-5 right-5 text-white hover:bg-red-700 bg-black font-medium rounded-full text-sm p-3"
+        >
+          <Trash2 size={36} strokeWidth={2.25} />
+          <span className="ml-4">Delete Group</span>
+        </button>{" "}
       </div>
     </>
   );

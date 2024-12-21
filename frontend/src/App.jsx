@@ -15,63 +15,66 @@ import AddInGroup from "./components/members/main/AddInGroup";
 
 const routes = [
   {
-    path : "/",
-    element : <LandingPage/>,
-    isPrivate : false
-  },{
-    path : "/signin",
-    element : <SignIn/>,
-    isPrivate : false
-  },{
-    path : "/users",
-    element : <GroupMembers/>,
-    isPrivate : false
-  },{
-    path : "/expense/:expenseId/products",
-    element : <Product/>,
-    isPrivate : false
-  },{
-    path : "/expense/:expenseId/product/:productId",
-    element : <EditProduct/>,
-    isPrivate : false
-  },{
-    path : "/group/:groupId/expenses",
-    element : <Expenses/>,
-    isPrivate : false
-  },{
-    path : "/groups",
-    element : <Group/>,
-    isPrivate : false
-  },{
-    path : "/user",
-    element : <User/>,
-    isPrivate : false
-  },{
-    path : "/test",
-    element : <AddInGroup/>,
-    isPrivate : false
+    path: "/",
+    element: <LandingPage />,
+    isPrivate: false,
   },
-]
+  {
+    path: "/signin",
+    element: <SignIn />,
+    isPrivate: false,
+  },
+  {
+    path: "/users",
+    element: <GroupMembers />,
+    isPrivate: false,
+  },
+  {
+    path: "/expense/:expenseId/products",
+    element: <Product />,
+    isPrivate: false,
+  },
+  {
+    path: "/expense/:expenseId/product/:productId",
+    element: <EditProduct />,
+    isPrivate: false,
+  },
+  {
+    path: "/group/:groupId/expenses",
+    element: <Expenses />,
+    isPrivate: false,
+  },
+  {
+    path: "/groups",
+    element: <Group />,
+    isPrivate: false,
+  },
+  {
+    path: "/user",
+    element: <User />,
+    isPrivate: false,
+  },
+  {
+    path: "/test",
+    element: <AddInGroup />,
+    isPrivate: false,
+  },
+];
 function App() {
-    const { user } = useUser();
-    const navigate = useNavigate();
-   console.log({user});
+  const { user } = useUser();
+  const navigate = useNavigate();
+  // console.log({ user });
 
-    const { pathname } = useResolvedPath();
+   const { pathname } = useResolvedPath();
 
-    const currentRoute = routes.find((i) => {
-      return i.path === pathname;
-    });
-    useEffect(() => {
-  console.log({
-    user,
-    pathname,
+  const currentRoute = routes.find((i) => {
+    return i.path === pathname;
   });
-
+  useEffect(() => {
     if (!user?._id) {
-     navigate("/signin");
+      // navigate("/signin");
     } else if (user?._id && !currentRoute?.isPrivate) {
-     navigate("/user");
+      //navigate("/user");
     }
   }, [user, pathname]);
 

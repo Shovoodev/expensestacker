@@ -8,6 +8,7 @@ import {
   updateGroupById,
 } from "./../db/group";
 import { createMember } from "./../db/membership";
+import { findMultipleUserById, getUserById } from "./../db/user";
 export const registerUserGroup = async (
   req: express.Request,
   res: express.Response
@@ -113,5 +114,22 @@ export const updateGroupName = async (
     return res
       .status(500)
       .json({ error: "An error occurred while updating the group" });
+  }
+};
+export const getAllUserInGroup = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const { groupId } = req.params;
+    if (groupId) {
+      const groupUser = await getGroupById(groupId);
+
+      const usersIds = groupUser.users.map((id) => id.toString());
+      const getUsers = await findMultipleUserById(usersIds);
+      return res.status(200).json(getUsers);
+    }
+  } catch (error) {
+    console.log(error);
   }
 };

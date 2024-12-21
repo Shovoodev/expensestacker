@@ -63,7 +63,6 @@ export const deleteProduct = async (
 ): Promise<any> => {
   try {
     const { productId } = req.params;
-    console.log({ productId });
 
     const deleted = await deleteProductById(productId);
 
@@ -81,8 +80,6 @@ export const updateProduct = async (
   try {
     const { productId } = req.params;
     const { name, quantity, price } = req.body;
-    console.log({ name, quantity, price });
-    console.log({ productId });
 
     if (!name || !quantity || !price) {
       return res.status(400);
@@ -93,7 +90,6 @@ export const updateProduct = async (
       quantity,
       price,
     });
-    console.log({ update });
 
     if (update) {
       return res.status(200).json(update);

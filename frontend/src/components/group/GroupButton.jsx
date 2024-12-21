@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useGroup } from "../hook/use-group";
 import { NavLink, useParams } from "react-router";
+import { MoveRight } from "lucide-react";
 
 const GroupButton = ({ groupId ,name, className, type = "button", onClick }) => {
-  const [updateGroup , setUpdateGroup] = useState("")
-  const [updateMode , setUpdateMode] = useState(false)
   const { setAllGroups , allGroups } = useGroup();
   const handleDelete = async () => {
     await fetch("http://localhost:3333/group/delete/" + groupId, {
@@ -24,11 +23,12 @@ const GroupButton = ({ groupId ,name, className, type = "button", onClick }) => 
 
   return (
     <>
-    <button type={type} className={"inline-block rounded-full border-2 border-primary px-6 pb-[6px] pt-2 text-xs font-medium uppercase  text-primary transition duration-150 ease-in-out hover:border-primary-accent-300  hover:text-primary-accent-300  hover:bg-gray-600 hover:text-white dark:text-primary-500 dark:hover:bg-blue-950 dark:focus:bg-blue-950 " + className}>
-    <NavLink to={`/group/${groupId}/expenses`} >
+    <NavLink className=" gap-3 inline-block" to={`/group/${groupId}/expenses`} >
+    <button type={type} className={"inline-flex items-center px-4 py-5 text-sm font-medium text-center text-white bg-gray-700 rounded-lg hover:bg-gray-800  uppercase " + className}>
       {name}
-      </NavLink>
+      <MoveRight size={20} strokeWidth={1} absoluteStrokeWidth />
     </button>
+      </NavLink>
     </>
   );
 };

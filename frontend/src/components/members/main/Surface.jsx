@@ -25,11 +25,8 @@ const Surface = () => {
             {loading ? (
               <p>Loading...</p>
             ) : users && users.length > 0 ? (
-              users.map(({ _id, username }) => {
-                return (
-                  <Profiles username={username} key={_id}>
-                  </Profiles>
-                );
+              users.map((user) => {
+                return <Profiles user={user}></Profiles>;
               })
             ) : (
               <p>No Users found.</p>
