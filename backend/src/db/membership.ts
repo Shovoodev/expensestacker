@@ -21,11 +21,13 @@ const memberShipSchema = new mongoose.Schema({
 });
 const memberModel = mongoose.model("MEMBERSHIP", memberShipSchema);
 export const getMembers = () => memberModel.find();
-export const getAllMembers = () => memberModel.find();
+export const getAllMembers = (groupId: string) => memberModel.find({ groupId });
 export const createMember = (values: Record<string, any>) =>
   new memberModel(values).save().then((member) => member.toObject());
-export const updateGroupById = (id: string, values: Record<string, any>) =>
-  memberModel.findByIdAndUpdate(id, values);
+export const updateMemberByGroupId = (
+  groupId: string,
+  values: Record<string, any>
+) => memberModel.findByIdAndUpdate(groupId, values);
 export const deleteUserFronGroupId = (userId: string) =>
   memberModel.findByIdAndDelete({ _id: userId });
 export const findDuplicatedUsers = async () => {

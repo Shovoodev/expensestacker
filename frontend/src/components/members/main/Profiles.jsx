@@ -6,12 +6,21 @@ import { useGroup } from "../../hook/use-group";
 const Profiles = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const { allGroups, setAllGroups } = useGroup();
-  const getUserGroups = async(group) => {
-    const groupId = group._id 
-    const userId = user._id
-    console.log({groupId, userId});
-     await fetch(``)
-
+  const getUserGroups = async (group) => {
+    const groupId = group._id;
+    const userId = user._id;
+    if (groupId && userId) {
+      const user = await fetch(
+        `http://localhost:3333/${userId}/${groupId}/update`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      ).then((data) => console.log({ data }));
+    }
   };
   return (
     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow ">

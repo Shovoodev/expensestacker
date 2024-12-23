@@ -22,11 +22,7 @@ const SignIn = () => {
       .then((res) => res.json())
       .then(async (data) => {
         if (data._id) {
-          setTimeout(() => {
-            setIsLoading(true);
-            navigate("/user");
-            setIsLoading(false);
-          }, 1000);
+          navigate("/user");
           localStorage.setItem("user", JSON.stringify(data));
         }
       });

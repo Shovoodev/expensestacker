@@ -78,10 +78,9 @@ const Expenses = () => {
       console.error(error);
     }
   };
-
   useEffect(() => {
     getAllGroupUser();
-  }, [groupId]);
+  }, []);
 
   return (
     <>
@@ -141,16 +140,16 @@ const Expenses = () => {
           </div>
           <div>
             <h1 className=" p-4 text-xl"> Members on this Group </h1>
-
-            {loading ? (
-              <p>Loading...</p>
-            ) : groupUser && groupUser.length > 0 ? (
-              groupUser.map(({ _id, username }) => {
-                return <UserGroup username={username} key={_id}></UserGroup>;
-              })
-            ) : (
-              <p className=" text-center text-xl">No Members in this Group</p>
-            )}
+            <div className="flex gap-2">
+              {groupUser.length > 0 && groupUser ? (
+                groupUser.allUsers.map(({ _id, username }) => {
+                  console.log({ _id, username });
+                  return <UserGroup username={username} key={_id} />;
+                })
+              ) : (
+                <p> no data</p>
+              )}
+            </div>
           </div>
         </div>
         <button
@@ -158,8 +157,8 @@ const Expenses = () => {
           className="absolute flex items-center px-6 py-2 top-5 right-5 text-white hover:bg-red-700 bg-black font-medium rounded-full text-sm p-3"
         >
           <Trash2 size={36} strokeWidth={2.25} />
-          <span className="ml-4">Delete Group</span>
-        </button>{" "}
+          <span className="hidden md:inline ml-2">Delete Group</span>
+        </button>
       </div>
     </>
   );

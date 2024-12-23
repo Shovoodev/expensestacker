@@ -10,7 +10,9 @@ import {
   deleteUserFronGroupId,
   findDuplicatedUsers,
   getMembers,
+  getAllMembers,
   getUsers,
+  updateMemberByGroupId,
 } from "./../db/membership";
 import express from "express";
 
@@ -70,20 +72,26 @@ export const updateGroupUsers = async (
   try {
     const { groupId, userId } = req.params;
     const user = await getUserById(userId);
+    console.log({ user });
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
     const group = await getGroupById(groupId);
-
+    console.log({ group });
     if (!group) {
       return res.status(404).json({ message: "Group not found" });
     }
-    if (user) {
-      const updateUsers = await updateGroupById({
+    if (user && group) {
+      const userId = user._id.toString();
+      const groupId = group._id.toString();
+      console.log({ userId, groupId });
+
+      const updateUser = await updateMemberByGroupId(groupId, {
+        groupId: groupId,
         userId: userId,
-        groupId: group._id,
-        users: [...users, userId],
       });
+      res.status(200).json(updateUser);
     }
   } catch (error) {
     console.log(error);
@@ -96,20 +104,22 @@ export const getAllUsersByGroup = async (
 ): Promise<any> => {
   try {
     const { groupId } = req.params;
-    const group = await getGroupById(groupId);
-    const alluser = [];
-    if (!group) {
-      return res.status(404).json({ message: "Group not found" });
-    }
-    const users = group.users;
+
+    const users = await getAllMembers(groupId);
+    // const group = await getGroupById(groupId);
+    // if (!group) {
+    //   return res.status(404).json({ message: "Group not found" });
+    // }
+    // const users = group.users;
+
     const allUsers = await Promise.all(
       users.map(async (id) => {
-        const user = await getUserById(id);
-        const val = user.username.toString();
-        alluser.push(val);
+        const user = await getUserById(id.userId);
+        return user.username;
       })
     );
-    return res.status(200).json({ alluser });
+    console.log({ allUsers });
+    return res.status(200).json({ allUsers });
   } catch (error) {
     console.error("Error fetching users by group:", error);
     return res.status(400);

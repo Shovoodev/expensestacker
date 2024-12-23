@@ -42,6 +42,7 @@ const Group = () => {
         setAllGroups(allGroups);
       })
       .then(() => userGroups())
+      .then(() => setIsModalOpen(false))
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   };

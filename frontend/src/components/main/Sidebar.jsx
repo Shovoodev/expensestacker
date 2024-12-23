@@ -18,8 +18,12 @@ const Sidebar = () => {
   const toggle = () => setOpenSidebar(!openSidebar);
   return (
     <aside
-      className={`bg-gray-50 shadow-lg relative text-left z-40 h-screen transition-transform -translate-x-full sm:translate-x-0
-      ${openSidebar ? " w-52" : "w-12 "}`}
+      className={`bg-gray-50 shadow-lg relative text-left z-40 h-screen 
+      ${
+        openSidebar
+          ? " w-52 transition-transform -translate-x-36 sm:translate-x-0"
+          : "w-12 "
+      }`}
     >
       <div className="flex justify-between">
         {openSidebar ? (
@@ -41,7 +45,7 @@ const Sidebar = () => {
           )}
         </button>
       </div>
-      <div className="h-full  overflow-y-auto bg-gray-50">
+      <div className="h-full bg-gray-50">
         <ul className="space-y-2 font-medium">
           <NavList
             address="/"
@@ -50,7 +54,7 @@ const Sidebar = () => {
             header="inbox"
           />
           <NavList
-            address="/"
+            address="/profile"
             openSidebar={openSidebar}
             children={<User color="black" />}
             header="Profile"

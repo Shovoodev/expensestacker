@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import EditProduct from "./components/products/EditProduct";
 import GroupMembers from "./components/members/GroupMembers";
 import AddInGroup from "./components/members/main/AddInGroup";
+import Profile from "./components/profile/Profile";
 
 const routes = [
   {
@@ -27,56 +28,63 @@ const routes = [
   {
     path: "/users",
     element: <GroupMembers />,
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: "/expense/:expenseId/products",
     element: <Product />,
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: "/expense/:expenseId/product/:productId",
     element: <EditProduct />,
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: "/group/:groupId/expenses",
     element: <Expenses />,
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: "/groups",
     element: <Group />,
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: "/user",
     element: <User />,
-    isPrivate: false,
+    isPrivate: true,
   },
   {
     path: "/test",
     element: <AddInGroup />,
-    isPrivate: false,
+    isPrivate: true,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
+    isPrivate: true,
   },
 ];
 function App() {
   const { user } = useUser();
   const navigate = useNavigate();
-  // console.log({ user });
 
-   const { pathname } = useResolvedPath();
+  const { pathname } = useResolvedPath();
 
   const currentRoute = routes.find((i) => {
     return i.path === pathname;
   });
-  useEffect(() => {
-    if (!user?._id) {
+  const pathfinder = () => {
+    if (!user?._id && pathname !== "/signin") {
       // navigate("/signin");
-    } else if (user?._id && !currentRoute?.isPrivate) {
-      //navigate("/user");
+    } else if (user?._id && currentRoute?.isPrivate === false) {
+      // navigate("/user");
     }
-  }, [user, pathname]);
+  };
+  useEffect(() => {
+    pathfinder();
+  }, [user, pathname, navigate, currentRoute]);
 
   return (
     <>

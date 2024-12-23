@@ -21,17 +21,17 @@ const GeneralNavbar = ({ className }) => {
     <>
       <nav
         className={
-          "bg-gradient-to-b from-slate-50 shadow-lg to-slate-100 p-2 flex justify-between gap-4  " + className
+          "bg-gradient-to-b from-slate-50 shadow-lg to-slate-100 p-2 flex justify-between gap-4  " +
+          className
         }
       >
         <div className="flex items-center">
-      <div className="text-2xl font-bold text-black">
-        <NavLink to="/user">
-          
-        <span className="text-gray-600">Expense</span>Tracker
-        </NavLink>
-      </div>
-    </div>
+          <div className="text-2xl font-bold text-black">
+            <NavLink to="/user">
+              <span className="text-gray-600">Expense</span>Tracker
+            </NavLink>
+          </div>
+        </div>
         <div className="flex gap-3 p-1 ">
           <Bell color="black" className="w-7 h-7 mt-1 hover:scale-125" />
           <Menu>
