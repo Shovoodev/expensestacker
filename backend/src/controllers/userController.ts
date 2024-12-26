@@ -58,14 +58,20 @@ export const signOutUser = async (
     return res.status(400);
   }
 };
-export const addMemberToGroup = async (
+export const getSingleUser = async (
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
   try {
-    
+    const { userId } = req.params;
+    const user = await getUserById(userId);
+    if (!user) {
+      console.log("no user found");
+    }
+    if (user) {
+      return res.status(200).json(user);
+    }
   } catch (error) {
     console.log(error);
-    
   }
-}
+};

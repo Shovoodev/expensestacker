@@ -9,16 +9,9 @@ export const useproduct = () => {
     
     fetch(`http://localhost:3333/expense/${expenseId}/products`)
       .then((res) => res.json())
-      .then((data) => {
-        data.map((product) => {
-          console.log(`Product: ${JSON.stringify(product.price)}`);
-        });        
-        setAllProducts(data);
-      }).then((data) => {
-        const total = data.reduce((sum, product) => sum + product.price * product.quantity, 0);
-        console.log(`Total Cost: ${total}`);
-        setTotalCost(total)
-  })
+      .then((data) =>      
+        setAllProducts(data)
+      )
       
       .catch((error) => {
         console.log(error);
@@ -27,7 +20,7 @@ export const useproduct = () => {
   useEffect(() => {
     getAllProducts()
 
-  }, []);
+  }, [allProducts , setAllProducts]);
 
-  return { allProducts, setAllProducts ,setTotalCost, totalCost};
+  return { allProducts, setAllProducts};
 };

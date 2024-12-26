@@ -5,6 +5,10 @@ import {
   getGroupById,
   updateGroupById,
 } from "./../db/group";
+import formData from "form-data";
+import express from "express";
+import nodemailer from "nodemailer";
+import { authentication, random } from "./../helpers";
 import {
   createMember,
   deleteUserFronGroupId,
@@ -13,15 +17,13 @@ import {
   getAllMembers,
   getUsers,
   updateMemberByGroupId,
+  getMembersByGroupId,
+  getmembershipByInviteToken,
+  getMemberByIdAndToken,
 } from "./../db/membership";
-import express from "express";
+import { token } from "morgan";
 
 export const assigneUserToGroup = async (
-  /**
-   * 1. check if user already exists in the user table/document
-   * 2. if existès, just create a membership row with groupId,and userId
-   * 3 if not, create user first, then do the steps above
-   */
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
@@ -41,57 +43,17 @@ export const assigneUserToGroup = async (
       return res.status(404).json({ message: "Group not found" });
     }
 
-    const newMember = await createMember({
-      userId: userId,
-      groupId: group._id,
-    });
-    console.log({ newMember });
-
-    if (newMember) {
-      return res.status(200).json(newMember);
-    }
-
-    if (user) {
-      const updateUsers = await updateGroupById({
-        userId: userId,
-        groupId: group._id,
-        users: [...users, userId],
-      });
-    }
-
-    console.log({ updateUsers });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const updateGroupUsers = async (
-  req: express.Request,
-  res: express.Response
-): Promise<any> => {
-  try {
-    const { groupId, userId } = req.params;
-    const user = await getUserById(userId);
-    console.log({ user });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const group = await getGroupById(groupId);
-    console.log({ group });
-    if (!group) {
-      return res.status(404).json({ message: "Group not found" });
-    }
-    if (user && group) {
-      const userId = user._id.toString();
-      const groupId = group._id.toString();
-      console.log({ userId, groupId });
-
-      const updateUser = await updateMemberByGroupId(groupId, {
+    const inviteToken = authentication(random(), random());
+    if (group) {
+      const newMember = await createMember({
+        userId: user._id,
         groupId: groupId,
-        userId: userId,
+        isActive: true,
+        inviteToken: inviteToken,
       });
-      res.status(200).json(updateUser);
+      console.log({ newMember });
+
+      return res.status(200).json(newMember);
     }
   } catch (error) {
     console.log(error);
@@ -104,22 +66,22 @@ export const getAllUsersByGroup = async (
 ): Promise<any> => {
   try {
     const { groupId } = req.params;
+    const members = await getMembersByGroupId(groupId);
+    if (!members) {
+      return res
+        .status(404)
+        .json({ message: "No members found for the group." });
+    }
 
-    const users = await getAllMembers(groupId);
-    // const group = await getGroupById(groupId);
-    // if (!group) {
-    //   return res.status(404).json({ message: "Group not found" });
-    // }
-    // const users = group.users;
-
-    const allUsers = await Promise.all(
-      users.map(async (id) => {
-        const user = await getUserById(id.userId);
-        return user.username;
+    const users = await Promise.all(
+      members.map(async (member) => {
+        if (member.groupId === groupId) {
+          return await getUserById(member.userId);
+        }
       })
     );
-    console.log({ allUsers });
-    return res.status(200).json({ allUsers });
+
+    return res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching users by group:", error);
     return res.status(400);
@@ -153,6 +115,149 @@ export const deleteUserFronGroup = async (
 
     if (deleteUser) {
       return res.status(200).json(deleteUser);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const inviteNewUser = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const { to, user } = req.body;
+    const { groupId, userId } = req.params;
+
+    const getusers = await getMembers();
+    const token;
+    const inviter = getusers.map((id) => {
+      if (id.userId == userId) {
+        return (token = id.inviteToken);
+      } else return;
+    });
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.mailgun.org",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.MAILGUN_USER,
+        pass: process.env.MAILGUN_PASS,
+      },
+    });
+    const info = await transporter.sendMail({
+      from: '"Toukir Shuvo " <shuvo@expensly.com>',
+      to: `${to}`,
+      subject: `Your friend ${user} send you requiest to join Expense Tracker `,
+      text: "Expense tracker is a platform to manage your expenses with your friend more easily and smartly",
+      html: ` Use this invitation code to add in the group with you and start shearing and managing expenses <br/>
+      use this website
+      <br/>
+      http://localhost:5173/invite/register?groupId=${groupId}&token=${token}
+      <br/>
+      This is token to directly join friend group and manage Expenses
+      <br/> ${token}`,
+    });
+    return res.status(200).json(info);
+  } catch (error) {
+    console.error("Mailgun error:", error);
+    return res.status(500).json({ error: "Failed to send email" });
+  }
+};
+
+export const joinInvitedUser = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const { groupId, userId } = req.params;
+    const { token } = req.body;
+    if (!userId) {
+      return res.redirect(`/invite/register`);
+    }
+    // if (!email || !password || !username) {
+    //   return res.status(400);
+    // }
+    // const existingUser = await getUserByEmail(email);
+
+    // if (existingUser) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "User is already exist , Please signUp" });
+    // }
+    // const salt = random();
+    // const user = await createUser({
+    //   email,
+    //   username,
+    //   authentication: {
+    //     salt,
+    //     password: authentication(salt, password),
+    //   },
+    // });
+
+    const getuserToken = await getMemberByIdAndToken(groupId, token);
+
+    if (!getuserToken || !getuserToken.inviteToken) {
+      return res.status(404).json({ error: "Group or invite token not found" });
+    }
+    const invitoken = getuserToken.inviteToken.trim().toString();
+    console.log({ invitoken });
+
+    const group = await getGroupById(groupId);
+    console.log({ groupId });
+
+    if (group) {
+      const newMember = await createMember({
+        userId: userId,
+        groupId: groupId,
+        isActive: true,
+        inviteToken: token,
+      });
+      console.log({ newMember });
+
+      return res.status(200).json(newMember);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getGroupUsingInviteToken = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const { token, groupId } = req.params;
+    const { email, password, username } = req.body;
+
+    if (!email || !password || !username) {
+      return res.status(400);
+    }
+    const existingUser = await getUserByEmail(email);
+
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ message: "User is already exist , Please signUp" });
+    }
+    const salt = random();
+    const user = await createUser({
+      email,
+      username,
+      authentication: {
+        salt,
+        password: authentication(salt, password),
+      },
+    });
+    if (user) {
+      const newMember = await createMember({
+        userId: user._id,
+        groupId: groupId,
+        isActive: true,
+        inviteToken: token,
+      });
+
+      return res.status(200).json(user);
     }
   } catch (error) {
     console.log(error);

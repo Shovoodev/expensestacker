@@ -3,11 +3,9 @@ import GeneralNavbar from "../main/GeneralNavbar";
 import UserSidebar from "./main/UserSidebar";
 
 const GroupMembers = () => {
-  
   return (
     <>
-      <UserSidebar/>
-     
+      <UserSidebar />
     </>
   );
 };

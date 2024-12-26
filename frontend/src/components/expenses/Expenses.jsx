@@ -3,11 +3,11 @@ import Input from "../ui/Input";
 import ExpenseButton from "./ExpenseButton";
 import { Trash2 } from "lucide-react";
 import GeneralNavbar from "../main/GeneralNavbar";
-import { NavLink, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../hook/use-user";
 import Sidebar from "../main/Sidebar";
 import UserGroup from "./UserGroup";
+import AddInGroup from "../members/main/AddInGroup";
 
 const Expenses = () => {
   const [newExpense, setNewExpense] = useState({ expensename: "" });
@@ -15,7 +15,6 @@ const Expenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user } = useUser();
   const [groupUser, setGroupUser] = useState([]);
   const { groupId } = useParams();
 
@@ -69,8 +68,6 @@ const Expenses = () => {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log({ data });
-
             setGroupUser(data);
           });
       }
@@ -140,14 +137,13 @@ const Expenses = () => {
           </div>
           <div>
             <h1 className=" p-4 text-xl"> Members on this Group </h1>
-            <div className="flex gap-2">
+            <div className=" grid grid-cols-5 gap-2">
               {groupUser.length > 0 && groupUser ? (
-                groupUser.allUsers.map(({ _id, username }) => {
-                  console.log({ _id, username });
+                groupUser?.map(({ _id, username }) => {
                   return <UserGroup username={username} key={_id} />;
                 })
               ) : (
-                <p> no data</p>
+                <p className="gap-4">This group is empty </p>
               )}
             </div>
           </div>

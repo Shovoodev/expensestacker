@@ -3,11 +3,7 @@ import { NavLink } from "react-router";
 const GroupCards = ({ groupName, groupId }) => {
   return (
     <div class="bg-white p-4 w-full rounded-lg shadow-md">
-      <img
-        src="https://via.placeholder.com/300"
-        alt="VPN Mobile App"
-        class="rounded-lg"
-      />
+      <img src="/default.jpg" alt="VPN Mobile App" class="rounded-lg" />
       <div class="mt-4">
         <h2 class="text-lg font-semibold">{groupName}</h2>
         <div class="flex justify-between mt-4 text-gray-600">

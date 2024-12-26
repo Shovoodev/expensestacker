@@ -9,6 +9,7 @@ const Group = () => {
   const [newGroup, setNewGroup] = useState({ groupName: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allGroups, setAllGroups] = useState();
+  const [owner, setOwner] = useState("");
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
   const userGroups = async () => {
@@ -17,6 +18,18 @@ const Group = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        const owners = data.map((id) => {
+          const val = id.owner_id;
+          const name = fetch(`http://localhost:3333/${val}/user`, {
+            credentials: "include",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              const name = data.username;
+              setOwner(name);
+            });
+        });
+
         setAllGroups(data);
       })
       .catch((error) => {
@@ -52,28 +65,33 @@ const Group = () => {
       <div className="flex">
         <Sidebar />
         <div className="flex-1 p-5">
-          <div className="flex flex-wrap gap-4 p-2 ">
-            {loading ? (
-              <p>Loading...</p>
-            ) : allGroups && allGroups.length > 0 ? (
-              allGroups.map(({ _id, name }) => {
-                return (
-                  <GroupButton
-                    groupId={_id}
-                    key={_id}
-                    name={name}
-                  ></GroupButton>
-                );
-              })
-            ) : (
-              <p>No groups found.</p>
-            )}
+          <div className=" flex justify-end">
             <button
               className="flex-col rounded-full shadow-xl text-xl border-2 border-primary px-6 py-2 pt-2 hover:text-white hover:bg-gray-800 font-medium uppercase "
               onClick={() => setIsModalOpen(!isModalOpen)}
             >
               {isModalOpen ? <p>minimize</p> : <p>ADD New Group</p>}
             </button>
+          </div>
+          <div className="flex flex-wrap gap-4 p-2 ">
+            {loading ? (
+              <p>Loading...</p>
+            ) : allGroups && allGroups.length > 0 ? (
+              allGroups.map(({ _id, name, created_at, isActive, owner }) => {
+                return (
+                  <GroupButton
+                    groupId={_id}
+                    key={_id}
+                    name={name}
+                    owner_id={owner}
+                    created_at={created_at}
+                    isActive={isActive}
+                  ></GroupButton>
+                );
+              })
+            ) : (
+              <p>No groups found.</p>
+            )}
           </div>
         </div>
         <div>

@@ -9,17 +9,16 @@ const Profiles = ({ user }) => {
   const getUserGroups = async (group) => {
     const groupId = group._id;
     const userId = user._id;
+    console.log({ groupId, userId });
+
     if (groupId && userId) {
-      const user = await fetch(
-        `http://localhost:3333/${userId}/${groupId}/update`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      ).then((data) => console.log({ data }));
+      await fetch(`http://localhost:3333/${userId}/${groupId}/join`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }).then(() => setLoading(true));
     }
   };
   return (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Profiles from "./Profiles";
 import { useUser } from "../../hook/use-user";
+import AddInGroup from "./AddInGroup";
 
 const Surface = () => {
   const { user } = useUser();

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router";
 import DeleteButton from "../ui/DeleteButton";
 import { useproduct } from "../hook/use-product";
-import Button from "../ui/Button";
-
 const ProductButton = ({
   name,
   className,
@@ -12,12 +10,13 @@ const ProductButton = ({
   type = "button",
   price,
   quantity,
+  setAllProducts,
+  getAllProducts,
   onClick,
 }) => {
   const [updateProduct, setUpdateProduct] = useState();
   const { expenseId } = useParams();
   const [updateMode, setUpdateMode] = useState(true);
-  const { setAllProducts, allProducts } = useproduct();
   const deleteProduct = async () => {
     const pro = productId;
     await fetch(
@@ -28,12 +27,14 @@ const ProductButton = ({
           "Content-Type": "application/json",
         },
       }
-    ).catch((error) => {
-      console.error(error);
-    });
+    )
+      .then(() => {
+        getAllProducts();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
-
-  useEffect(() => {}, [setAllProducts, allProducts]);
   return (
     <>
       <tr className={" " + className}>

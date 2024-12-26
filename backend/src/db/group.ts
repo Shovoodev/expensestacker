@@ -6,7 +6,6 @@ const groupSchema = new mongoose.Schema({
     unique: false,
   },
   owner_id: { type: String },
-  users: [{ type: mongoose.Schema.Types.ObjectId }],
   created_at: { type: Date, default: Date.now },
 });
 export const groupModel = mongoose.model("GROUPS", groupSchema);

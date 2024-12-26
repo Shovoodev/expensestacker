@@ -39,7 +39,6 @@ const Sidebar = () => {
             <SidebarClose />
           ) : (
             <div className=" ml-2">
-              {" "}
               <SidebarOpen />
             </div>
           )}

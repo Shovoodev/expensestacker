@@ -37,7 +37,7 @@ export const isAuthenticated = async (
     if (!sessionToken) {
       return res.status(403);
     }
-    const existingUser = await getUserBySessionToken(sessionToken)
+    const existingUser = await getUserBySessionToken(sessionToken);
     if (!existingUser) {
       return res.status(403);
     }
@@ -49,3 +49,9 @@ export const isAuthenticated = async (
     return res.sendStatus(400);
   }
 };
+
+export const AccessAuthentication = async (
+  req: AuthenticatedRequest,
+  res: express.Response,
+  next: express.NextFunction
+): Promise<any> => {};

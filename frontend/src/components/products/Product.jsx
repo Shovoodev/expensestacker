@@ -55,17 +55,13 @@ const Product = () => {
     fetch(`http://localhost:3333/expense/${expenseId}/products`)
       .then((res) => res.json())
       .then((data) => {
+        const totalCost = data.reduce((sum, { price, quantity }) => {
+          return sum + price * quantity;
+        }, 0);
+
+        setTotalCost(totalCost);
         setAllProducts(data);
       })
-      .then((data) => {
-        const total = data.reduce(
-          (sum, product) => sum + product.price * product.quantity,
-          0
-        );
-        console.log(`Total Cost: ${total}`);
-        setTotalCost(total);
-      })
-
       .catch((error) => {
         console.log(error);
       });
@@ -182,6 +178,8 @@ const Product = () => {
                         price={price}
                         quantity={quantity}
                         children="Edit"
+                        setAllProducts={setAllProducts}
+                        getAllProducts={getAllProducts}
                       ></ProductButton>
                     </>
                   );
@@ -193,7 +191,7 @@ const Product = () => {
           </table>
         </div>
         <div className="flex items-center justify-center text-2xl">
-          Total Spend on this Listing : {totalCost}
+          Total Spend on this Listing : {totalCost} €
         </div>
       </div>
     </>

@@ -6,7 +6,7 @@ const memberShipSchema = new mongoose.Schema({
     required: true,
   },
   groupId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true,
   },
   role: {
@@ -15,19 +15,31 @@ const memberShipSchema = new mongoose.Schema({
     required: true,
     default: "member",
   },
-  acessTokem: { type: String },
+  inviteToken: { type: String, required: true },
   isActive: { type: String, required: true, default: false },
   created_at: { type: Date, default: Date.now },
 });
 const memberModel = mongoose.model("MEMBERSHIP", memberShipSchema);
 export const getMembers = () => memberModel.find();
+export const getMembersByGroupId = (groupId: string) =>
+  memberModel.find({ groupId });
+export const getMemberByIdAndToken = (groupId: string, inviteToken: string) =>
+  memberModel.findOne({ groupId, inviteToken });
 export const getAllMembers = (groupId: string) => memberModel.find({ groupId });
+export const getmembershipByInviteToken = (inviteToken: string) =>
+  memberModel.findOne({ inviteToken });
 export const createMember = (values: Record<string, any>) =>
   new memberModel(values).save().then((member) => member.toObject());
 export const updateMemberByGroupId = (
-  groupId: string,
+  memberId: string,
   values: Record<string, any>
-) => memberModel.findByIdAndUpdate(groupId, values);
+) => {
+  return memberModel.findOneAndUpdate(
+    { _id: memberId },
+    { ...values },
+    { new: true }
+  );
+};
 export const deleteUserFronGroupId = (userId: string) =>
   memberModel.findByIdAndDelete({ _id: userId });
 export const findDuplicatedUsers = async () => {

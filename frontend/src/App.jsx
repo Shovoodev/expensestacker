@@ -1,7 +1,6 @@
 import { Route, Routes, useResolvedPath } from "react-router";
 import LandingPage from "./components/pages/LandingPage";
 import SignIn from "./components/Auth/SignIn";
-import SignUp from "./components/Auth/SignUp";
 import User from "./components/main/User";
 import Group from "./components/group/Group";
 import Product from "./components/products/Product";
@@ -13,11 +12,16 @@ import EditProduct from "./components/products/EditProduct";
 import GroupMembers from "./components/members/GroupMembers";
 import AddInGroup from "./components/members/main/AddInGroup";
 import Profile from "./components/profile/Profile";
-
+import JoinInGroup from "./components/members/newMember/JoinInGroup";
 const routes = [
   {
     path: "/",
     element: <LandingPage />,
+    isPrivate: false,
+  },
+  {
+    path: `/invite/register`,
+    element: <JoinInGroup />,
     isPrivate: false,
   },
   {
@@ -63,6 +67,11 @@ const routes = [
   {
     path: "/profile",
     element: <Profile />,
+    isPrivate: true,
+  },
+  {
+    path: "/joiningroup",
+    element: <JoinInGroup />,
     isPrivate: true,
   },
 ];

@@ -3,12 +3,11 @@ import { AuthenticatedRequest } from "./types";
 import {
   createGroup,
   deleteGroupById,
-  getGroupById,
   getGroups,
   updateGroupById,
 } from "./../db/group";
 import { createMember } from "./../db/membership";
-import { findMultipleUserById, getUserById } from "./../db/user";
+import { authentication, random } from "./../helpers";
 export const registerUserGroup = async (
   req: express.Request,
   res: express.Response
@@ -24,13 +23,17 @@ export const registerUserGroup = async (
       name,
       owner_id: userId,
     });
+    console.log({ group });
 
+    const inviteToken = authentication(random(), random());
     const member = await createMember({
       userId: userId,
       groupId: group._id,
       role: "admin",
+      inviteToken: inviteToken,
       isActive: true,
     });
+    console.log({ member });
 
     return res.status(200).json({ ...group, member });
   } catch (error) {
@@ -114,22 +117,5 @@ export const updateGroupName = async (
     return res
       .status(500)
       .json({ error: "An error occurred while updating the group" });
-  }
-};
-export const getAllUserInGroup = async (
-  req: express.Request,
-  res: express.Response
-): Promise<any> => {
-  try {
-    const { groupId } = req.params;
-    if (groupId) {
-      const groupUser = await getGroupById(groupId);
-
-      const usersIds = groupUser.users.map((id) => id.toString());
-      const getUsers = await findMultipleUserById(usersIds);
-      return res.status(200).json(getUsers);
-    }
-  } catch (error) {
-    console.log(error);
   }
 };

@@ -21,7 +21,7 @@ const GeneralNavbar = ({ className }) => {
     <>
       <nav
         className={
-          "bg-gradient-to-b from-slate-50 shadow-lg to-slate-100 p-2 flex justify-between gap-4  " +
+          " relative bg-gradient-to-b from-slate-50 shadow-lg to-slate-100 p-2 flex justify-between gap-4  " +
           className
         }
       >
@@ -36,18 +36,27 @@ const GeneralNavbar = ({ className }) => {
           <Bell color="black" className="w-7 h-7 mt-1 hover:scale-125" />
           <Menu>
             <MenuButton>
-              <User className="w-7 h-7 mt-1 hover:scale-125" color="black" />
+              <User
+                className="w-7 h-7 mt-1 mb-6 hover:scale-125"
+                color="black"
+              />
             </MenuButton>
-            <MenuItems anchor="bottom" className="p-4 rounded">
+            <MenuItems
+              anchor="bottom"
+              className="p-4 py-1 bg-gray-200 mb-4 rounded"
+            >
               <MenuItem>
-                <NavLink className="block data-[focus]:bg-blue-100 hover:rounded p-4 text-lg">
+                <NavLink
+                  to="/profile"
+                  className="block px-4 py-2 text-sm text-gray-700"
+                >
                   Profile
                 </NavLink>
               </MenuItem>
               <MenuItem>
                 <button
                   onClick={handleClick}
-                  className="block data-[focus]:bg-blue-100 font-bold text-lg p-4"
+                  className="block px-4 py-2 text-sm text-gray-700"
                 >
                   SignOut
                 </button>
