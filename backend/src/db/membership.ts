@@ -24,7 +24,7 @@ export const getMembers = () => memberModel.find();
 export const getMembersByGroupId = (groupId: string) =>
   memberModel.find({ groupId });
 export const getMemberByIdAndToken = (groupId: string, inviteToken: string) =>
-  memberModel.findOne({ groupId, inviteToken });
+  memberModel.find({ groupId, inviteToken });
 export const getAllMembers = (groupId: string) => memberModel.find({ groupId });
 export const getmembershipByInviteToken = (inviteToken: string) =>
   memberModel.findOne({ inviteToken });

@@ -7,7 +7,6 @@ import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../main/Sidebar";
 import UserGroup from "./UserGroup";
-import AddInGroup from "../members/main/AddInGroup";
 
 const Expenses = () => {
   const [newExpense, setNewExpense] = useState({ expensename: "" });

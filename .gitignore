@@ -8,6 +8,7 @@ frontend/node_modules
 # production
 /build
 example.js
+/backend/.env
 # misc
 .env
 backend/.env

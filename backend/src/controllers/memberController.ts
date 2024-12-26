@@ -133,7 +133,8 @@ export const inviteNewUser = async (
     const token;
     const inviter = getusers.map((id) => {
       if (id.userId == userId) {
-        return (token = id.inviteToken);
+        token = id.inviteToken;
+        return token;
       } else return;
     });
 
@@ -147,14 +148,14 @@ export const inviteNewUser = async (
       },
     });
     const info = await transporter.sendMail({
-      from: '"Toukir Shuvo " <shuvo@expensly.com>',
+      from: '"Toukir Shuvo" <shuvo@expensly.com>',
       to: `${to}`,
       subject: `Your friend ${user} send you requiest to join Expense Tracker `,
       text: "Expense tracker is a platform to manage your expenses with your friend more easily and smartly",
       html: ` Use this invitation code to add in the group with you and start shearing and managing expenses <br/>
       use this website
       <br/>
-      http://localhost:5173/invite/register?groupId=${groupId}&token=${token}
+      http://localhost:5173/invite/register
       <br/>
       This is token to directly join friend group and manage Expenses
       <br/> ${token}`,
@@ -176,6 +177,8 @@ export const joinInvitedUser = async (
     if (!userId) {
       return res.redirect(`/invite/register`);
     }
+    console.log({ token });
+
     // if (!email || !password || !username) {
     //   return res.status(400);
     // }
@@ -197,6 +200,7 @@ export const joinInvitedUser = async (
     // });
 
     const getuserToken = await getMemberByIdAndToken(groupId, token);
+    console.log({ getuserToken });
 
     if (!getuserToken || !getuserToken.inviteToken) {
       return res.status(404).json({ error: "Group or invite token not found" });
