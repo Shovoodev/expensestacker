@@ -5,53 +5,51 @@ import { useUser } from "../../hook/use-user";
 import { useNavigate, useSearchParams } from "react-router-dom";
 const JoinInGroup = () => {
   const { user } = useUser();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const token = searchParams.get("token");
+  console.log({ token });
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const [searchParams, setSearchParams] = useSearchParams();
-    await fetch(
-      `http://localhost:3333/invite/register/${groupId}/${userId}/invitation/join`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(token),
-      }
-    ).then(() => {
-      navigate(`/groups`);
-    });
-  };
+
+  useEffect(() => {
+    // check if token is in query string and user is logged in
+    // if user is not logged in, send him to login page with existing query strings
+    // then from there we join the user to the group
+    // else if the user is logged in
+    // join the user to group
+    //
+
+    if (!token) return;
+
+    if (!user) {
+      navigate(`/auth/signin?token=${token}`);
+    } else {
+    }
+  }, [token, user]);
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const groupId = searchParams.get();
+  //   const userId = searchParams.get(user?._id);
+  //   await fetch(
+  //     `http://localhost:3333/invite/register/${groupId}/${userId}/invitation/join`,
+  //     {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(token),
+  //     }
+  //   ).then(() => {
+  //     navigate(`/groups`);
+  //   });
+  // };
   return (
     <>
       <div className="absolute top-[20%] left-[50%] transform -translate-x-1/2 bg-gray-100 flex w-[90%] lg:w-[50%] flex-col items-center justify-center max-w-lg rounded-lg shadow-lg p-6">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-4 w-full max-w-xs"
-        >
-          <Input
-            label="Enter Group Token to join Group"
-            onChange={(e) =>
-              setSearchParams({
-                token: e.target.value,
-              })
-            }
-          />
-          <button
-            className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg transition"
-            type="submit"
-          >
-            Add In Group
-          </button>
-          <div>
-            if not signin please
-            <NavLink to="/signin">
-              <button className=" ml-4 bg-blue-600 px-2 text-white hover:bg-blue-800  py-2 rounded-lg transition">
-                signin
-              </button>
-            </NavLink>
-          </div>
-        </form>
+        <h3 className="text-2xl font-bold text-blue-700 animate-pulse">
+          Joining Group...
+        </h3>
       </div>
     </>
   );

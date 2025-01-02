@@ -23,8 +23,10 @@ const memberModel = mongoose.model("MEMBERSHIP", memberShipSchema);
 export const getMembers = () => memberModel.find();
 export const getMembersByGroupId = (groupId: string) =>
   memberModel.find({ groupId });
-export const getMemberByIdAndToken = (groupId: string, inviteToken: string) =>
-  memberModel.find({ groupId, inviteToken });
+export const getMembersByUserId = (userId: string) =>
+  memberModel.find({ userId });
+export const getMemberByToken = (inviteToken: string) =>
+  memberModel.findOne({ inviteToken });
 export const getAllMembers = (groupId: string) => memberModel.find({ groupId });
 export const getmembershipByInviteToken = (inviteToken: string) =>
   memberModel.findOne({ inviteToken });

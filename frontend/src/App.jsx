@@ -13,6 +13,7 @@ import GroupMembers from "./components/members/GroupMembers";
 import AddInGroup from "./components/members/main/AddInGroup";
 import Profile from "./components/profile/Profile";
 import JoinInGroup from "./components/members/newMember/JoinInGroup";
+import SignUp from "./components/Auth/SignUp";
 const routes = [
   {
     path: "/",
@@ -20,7 +21,7 @@ const routes = [
     isPrivate: false,
   },
   {
-    path: `/invite/register`,
+    path: `/invite/register?token=:token`,
     element: <JoinInGroup />,
     isPrivate: false,
   },
@@ -30,12 +31,17 @@ const routes = [
     isPrivate: false,
   },
   {
+    path: "/signup",
+    element: <SignUp />,
+    isPrivate: false,
+  },
+  {
     path: "/users",
     element: <GroupMembers />,
     isPrivate: true,
   },
   {
-    path: "/expense/:expenseId/products",
+    path: "/:groupId/expense/:expenseId/products",
     element: <Product />,
     isPrivate: true,
   },
@@ -67,11 +73,6 @@ const routes = [
   {
     path: "/profile",
     element: <Profile />,
-    isPrivate: true,
-  },
-  {
-    path: "/joiningroup",
-    element: <JoinInGroup />,
     isPrivate: true,
   },
 ];

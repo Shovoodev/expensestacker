@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useGroup } from "../hook/use-group";
 import { NavLink, useParams } from "react-router";
 import { MoveRight } from "lucide-react";
-
+import FormatDate from "../Helper";
 const GroupButton = ({
   groupId,
   name,
-  owner_id,
   className,
   type = "button",
   created_at,
@@ -27,11 +26,11 @@ const GroupButton = ({
         console.error(error);
       });
   };
-
+  const viewDate = FormatDate(created_at);
   return (
     <>
       <div className="flex justify-center items-center">
-        <div className=" h-80 w-80 bg-gray-200 rounded shadow-lg">
+        <div className=" h-60 w-60 bg-gray-200 rounded shadow-lg">
           <div className=" items-center gap-5 justify-between  flex mt-4">
             <h1 className="ml-5">{name}</h1>
             <NavLink
@@ -52,8 +51,7 @@ const GroupButton = ({
           <br className="shodow-black" />
           <div className="flex p-2">
             <div className=" mt-5 ml-6 p-5">
-              <p>owner : {owner_id}</p>
-              <p>data : {created_at}</p>
+              <p>data : {viewDate}</p>
               <p>status : {isActive}</p>
             </div>
             <div></div>

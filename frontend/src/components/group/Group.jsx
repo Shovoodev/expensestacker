@@ -9,27 +9,16 @@ const Group = () => {
   const [newGroup, setNewGroup] = useState({ groupName: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allGroups, setAllGroups] = useState();
-  const [owner, setOwner] = useState("");
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
+  console.log({ allGroups, setAllGroups });
+
   const userGroups = async () => {
     await fetch(`http://localhost:3333/groups`, {
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        const owners = data.map((id) => {
-          const val = id.owner_id;
-          const name = fetch(`http://localhost:3333/${val}/user`, {
-            credentials: "include",
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              const name = data.username;
-              setOwner(name);
-            });
-        });
-
         setAllGroups(data);
       })
       .catch((error) => {
@@ -76,16 +65,16 @@ const Group = () => {
           <div className="flex flex-wrap gap-4 p-2 ">
             {loading ? (
               <p>Loading...</p>
-            ) : allGroups && allGroups.length > 0 ? (
-              allGroups.map(({ _id, name, created_at, isActive, owner }) => {
+            ) : allGroups && allGroups.length >= 0 ? (
+              allGroups.map((group) => {
+                if (group === null) return;
                 return (
                   <GroupButton
-                    groupId={_id}
-                    key={_id}
-                    name={name}
-                    owner_id={owner}
-                    created_at={created_at}
-                    isActive={isActive}
+                    groupId={group._id}
+                    key={group._id}
+                    name={group.name}
+                    created_at={group.created_at}
+                    isActive={group.isActive}
                   ></GroupButton>
                 );
               })

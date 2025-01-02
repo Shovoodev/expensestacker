@@ -3,11 +3,13 @@ import { AuthenticatedRequest } from "./types";
 import {
   createGroup,
   deleteGroupById,
+  getGroupById,
   getGroups,
   updateGroupById,
 } from "./../db/group";
-import { createMember } from "./../db/membership";
+import { createMember, getMembersByUserId } from "./../db/membership";
 import { authentication, random } from "./../helpers";
+import { getAllExpenses, getExpenses } from "./../db/expenses";
 export const registerUserGroup = async (
   req: express.Request,
   res: express.Response
@@ -69,11 +71,15 @@ export const getGroupsByUser = async (
   try {
     const user = req.identity;
 
-    const data = await getGroups(user.id);
+    const memberOfGroups = await getMembersByUserId(user.id);
+    const groups = await Promise.all(
+      memberOfGroups.map(async (member) => {
+        const memberId = member.groupId;
+        return await getGroupById(memberId);
+      })
+    );
 
-    if (data) {
-      return res.status(200).json(data);
-    }
+    return res.status(200).json(groups);
   } catch (error) {
     console.log(error);
     res.sendStatus(400);
@@ -117,5 +123,25 @@ export const updateGroupName = async (
     return res
       .status(500)
       .json({ error: "An error occurred while updating the group" });
+  }
+};
+
+export const groupExpenseCalculation = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  // to do the calculation hear
+  try {
+    const { groupId } = req.params;
+
+    const allExpenses = await getExpenses(groupId);
+    console.log({ allExpenses });
+
+    if (allExpenses) {
+      return res.status(200).json(allExpenses);
+    }
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(400);
   }
 };

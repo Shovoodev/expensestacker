@@ -47,7 +47,7 @@ const Profiles = ({ user }) => {
                       className="flex p-2 items-center text-center "
                       key={idx}
                     >
-                      {group.name}
+                      {group?.name}
                     </button>
                   );
                 })
