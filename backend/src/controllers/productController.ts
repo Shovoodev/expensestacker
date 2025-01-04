@@ -156,6 +156,7 @@ export const getTotalExpenseByUser = async (
     if (!groups) {
       return res.status(404).json({ error: "Expense not found" });
     }
+    let inTotal = 0;
     const productValues = await Promise.all(
       groups.map(async (id) => {
         const expensename = id.expensename;
@@ -168,7 +169,8 @@ export const getTotalExpenseByUser = async (
           (sum, { price, quantity }) => sum + price * quantity,
           0
         );
-        return { totalCost, expensename, createdTime, done_By };
+        inTotal += totalCost;
+        return { totalCost, expensename, createdTime, done_By, inTotal };
       })
     );
     const flatedArray = productValues.flat();

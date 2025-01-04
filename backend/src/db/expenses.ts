@@ -12,6 +12,9 @@ export const expenseModel = mongoose.model("Expenses", expenseSchema);
 export const getAllExpenses = () => expenseModel.find();
 export const getExpenses = (groupId: string) =>
   expenseModel.find({ group_id: groupId });
+export const getExpenseByDoneBy = (done_By: string) =>
+  expenseModel.find({ done_By });
+
 export const getExpensesById = (id: string) => expenseModel.findById(id);
 export const createExpenses = (values: Record<string, any>) =>
   new expenseModel(values).save().then((user) => user.toObject());

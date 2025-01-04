@@ -12,6 +12,7 @@ import ShowExpenseDetail from "./ShowExpenseDetail";
 const Expenses = () => {
   const [newExpense, setNewExpense] = useState({ expensename: "" });
   const [printAllExpenses, setPrintAllExpenses] = useState([]);
+  const [totalGroupExpense, setTotalGroupExpense] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -75,6 +76,19 @@ const Expenses = () => {
       console.error(error);
     }
   };
+  const getAllExpenses = async () => {
+    await fetch(`http://localhost:3333/${groupId}/totalcostofproducts`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const total = data.reduce((sum, { totalCost }) => sum + totalCost, 0);
+        setTotalGroupExpense(total);
+      });
+  };
+  useEffect(() => {
+    getAllExpenses();
+  }, []);
   useEffect(() => {
     getAllGroupUser();
   }, []);
@@ -174,7 +188,7 @@ const Expenses = () => {
                           colSpan={1}
                           className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800"
                         >
-                          10000 euro
+                          {totalGroupExpense} euro
                         </td>
                       </tr>
                     </tbody>

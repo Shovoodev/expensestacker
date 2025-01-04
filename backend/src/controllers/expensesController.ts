@@ -3,6 +3,7 @@ import {
   createExpenses,
   deleteExpensesById,
   getAllExpenses,
+  getExpenseByDoneBy,
   getExpenses,
   getExpensesById,
   updateExpensesById,
@@ -10,7 +11,7 @@ import {
 
 import { AuthenticatedRequest } from "./types";
 import { getGroupById } from "./../db/group";
-import { getMembersByGroupId } from "./../db/membership";
+import { getMembersByGroupId, getMembersByUserId } from "./../db/membership";
 
 export const registerExpenceOnGroup = async (
   req: AuthenticatedRequest,
@@ -112,21 +113,53 @@ export const getAllExpensesForFeed = async (
   }
 };
 
-export const userExpenseRegister = async (
+export const userExpenseRegisterCalculation = async (
   req: AuthenticatedRequest,
   res: express.Response
 ): Promise<any> => {
   try {
-    const { groupId } = req.params;
     const user = req.identity;
+    // const { groupId } = req.params;
+    console.log({ user });
+    //const groups = await getExpenseByDoneBy(user.username);
+    // console.log({ groups });
 
-    if (!user) {
-      console.log("no user found");
-    }
-    if (user) {
-      return res.status(200).json(user);
-    }
+    // if (!groups) {
+    //   return res.status(404).json({ error: "Expense not found" });
+    // }
+
+    return res.status(200).json();
   } catch (error) {
     console.log(error);
+  }
+};
+// this is for test
+export const getExpenseDoneByUser = async (
+  req: AuthenticatedRequest,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const user = req.identity;
+    console.log({ user });
+    if (!user) {
+      return res.status(403).json({ error: "User not authenticated" });
+    }
+
+    // const memberOfGroups = await getMembersByUserId(user.id);
+    // console.log({ memberOfGroups });
+
+    // const groups = await Promise.all(
+    //   memberOfGroups.map(async (member) => {
+    //     const memberId = member.groupId;
+    //     console.log({ memberId });
+
+    //     return await getGroupById(memberId);
+    //   })
+    // );
+
+    return res.status(200);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "Failed to fetch expenses" });
   }
 };

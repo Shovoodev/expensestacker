@@ -21,13 +21,14 @@ const ProductNavbar = ({ groupId }) => {
   useEffect(() => {}, [listOfExpenses]);
 
   return (
-    <div className="p-2">
+    <div>
       <header className=" flex justify-between p-4 border">
         <div className="flex gap-3">
+          <div className="flex items-center p-2 hover:rounded-lg ">Sort by</div>
           <Menu>
             <MenuButton>
               <button className="flex items-center p-2 hover:rounded-lg  hover:bg-gray-700 hover:text-white">
-                <ClipboardList size={32} /> <span> Product List</span>
+                <ClipboardList size={32} /> <span> Member</span>
               </button>
             </MenuButton>
             <MenuItems anchor="bottom">

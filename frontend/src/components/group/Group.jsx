@@ -4,14 +4,15 @@ import GroupButton from "./GroupButton";
 import GeneralNavbar from "../main/GeneralNavbar";
 import { useUser } from "../hook/use-user";
 import Sidebar from "../main/Sidebar";
-
+import SortingByMonth from "./sorting/SortingByMonth";
+import FormatDate from "../Helper";
 const Group = () => {
   const [newGroup, setNewGroup] = useState({ groupName: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allGroups, setAllGroups] = useState();
   const [loading, setLoading] = useState(false);
+  const [month, setMonth] = useState();
   const { user } = useUser();
-  console.log({ allGroups, setAllGroups });
 
   const userGroups = async () => {
     await fetch(`http://localhost:3333/groups`, {
@@ -19,7 +20,8 @@ const Group = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setAllGroups(data);
+        if (data === null) return;
+        else return setAllGroups(data);
       })
       .catch((error) => {
         console.log(error);
@@ -54,6 +56,10 @@ const Group = () => {
       <div className="flex">
         <Sidebar />
         <div className="flex-1 p-5">
+          <div className="flex gap-5 items-center ">
+            <div className=" text-xl">sort by </div>
+            <SortingByMonth />
+          </div>
           <div className=" flex justify-end">
             <button
               className="flex-col rounded-full shadow-xl text-xl border-2 border-primary px-6 py-2 pt-2 hover:text-white hover:bg-gray-800 font-medium uppercase "
