@@ -156,12 +156,16 @@ export const getTotalExpenseByUser = async (
     if (!groups) {
       return res.status(404).json({ error: "Expense not found" });
     }
+
     let inTotal = 0;
     const productValues = await Promise.all(
       groups.map(async (id) => {
         const expensename = id.expensename;
         const createdTime = id.created_at;
         const done_user = await getUserById(id.done_By);
+        if (!done_user) {
+          return res.status(404).json({ error: "User not found" });
+        }
         const done_By = done_user?.username;
         const expensesId = id._id.toString();
         const products = await getProductByExpenseId(expensesId);
@@ -177,5 +181,6 @@ export const getTotalExpenseByUser = async (
     return res.status(200).json(flatedArray);
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };

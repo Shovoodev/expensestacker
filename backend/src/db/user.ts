@@ -13,8 +13,7 @@ const userSchema = new mongoose.Schema({
 export const userModel = mongoose.model("User", userSchema);
 export const getUsers = () => userModel.find();
 export const getUserByEmail = (email: string) => userModel.findOne({ email });
-export const getsingleUserById = (userId: string) =>
-  userModel.findOne({ userId });
+export const getsingleUserById = (userId: string) => userModel.findById(userId);
 export const getUserBySessionToken = (sessionToken: string) =>
   userModel.findOne({ "authentication.sessionToken": sessionToken });
 export const getUserById = (id: string) => userModel.findById(id);

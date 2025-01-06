@@ -41,8 +41,7 @@ const SignUp = () => {
             className="w-[50%] ml-[25%] mt-4 bg-blue-500 text-white py-2 px-2 rounded-md hover:bg-blue-600  "
             type="submit"
           >
-            {" "}
-            Submit{" "}
+            Submit
           </Button>
         </form>
         <div className=" flex-initial">

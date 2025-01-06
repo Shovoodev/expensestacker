@@ -2,7 +2,6 @@ import { MoveRight } from "lucide-react";
 import React from "react";
 import { NavLink } from "react-router";
 import FormatDate from "../Helper";
-import { useUser } from "../hook/use-user";
 const ExpenseButton = ({
   groupId,
   created_at,
@@ -13,7 +12,7 @@ const ExpenseButton = ({
   onClick,
 }) => {
   const viewDate = FormatDate(created_at);
-  const { user } = useUser();
+
   return (
     <>
       <div className="flex justify-center items-center">
@@ -38,7 +37,7 @@ const ExpenseButton = ({
           </div>
           <div className="flex p-2">
             <div className="">
-              <p>Done By : {user?.username}</p>
+              <p>Done By : //todo</p>
               <p>data : {viewDate} </p>
             </div>
             <div></div>

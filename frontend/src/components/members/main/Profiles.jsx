@@ -9,7 +9,6 @@ const Profiles = ({ user }) => {
   const getUserGroups = async (group) => {
     const groupId = group._id;
     const userId = user._id;
-    console.log({ groupId, userId });
 
     if (groupId && userId) {
       await fetch(`http://localhost:3333/${userId}/${groupId}/join`, {
@@ -22,20 +21,20 @@ const Profiles = ({ user }) => {
     }
   };
   return (
-    <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow ">
+    <div className="w-full p-3 max-w-sm md:p-0 bg-white border border-gray-200 rounded-lg shadow ">
       <div className="flex justify-end px-4 pt-4"></div>
-      <div className="flex flex-col items-center pb-10">
+      <div className="flex flex-col p-2 items-center pb-10">
         <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-black">
           {user.username}
         </h5>
-        <div className="flex mt-4 md:mt-6">
+        <div className="flex flex-wrap justify-center mt-4 md:mt-6">
           <Menu>
             <MenuButton className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 ">
               Add In Group
             </MenuButton>
             <MenuItems
               anchor="bottom"
-              className=" p-2 bg-gray-800 rounded-lg text-white text-lg"
+              className="p-2 bg-gray-800 rounded-lg text-white text-lg"
             >
               {loading ? (
                 <p>Loading...</p>
@@ -56,16 +55,10 @@ const Profiles = ({ user }) => {
               )}
             </MenuItems>
           </Menu>
-          <NavLink
-            href="#"
-            className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10  dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-          >
+          <NavLink className="py-2 px-4  ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
             Profile
           </NavLink>
-          <NavLink
-            href="#"
-            className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10  dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-          >
+          <NavLink className="py-2 px-4 ms-2 mt-2 sm:mt-0 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
             Expenses
           </NavLink>
         </div>

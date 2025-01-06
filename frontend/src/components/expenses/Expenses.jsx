@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Input from "../ui/Input";
 import ExpenseButton from "./ExpenseButton";
-import { Trash2 } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import GeneralNavbar from "../main/GeneralNavbar";
 import { NavLink, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../main/Sidebar";
 import UserGroup from "./UserGroup";
 import ShowExpenseDetail from "./ShowExpenseDetail";
+import UserTotalExpenses from "./UserTotalExpenses";
 
 const Expenses = () => {
   const [newExpense, setNewExpense] = useState({ expensename: "" });
@@ -16,21 +17,25 @@ const Expenses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [expenseUserRegister, setExpenseUserRegister] = useState();
   const [groupUser, setGroupUser] = useState([]);
   const { groupId } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await fetch(`http://localhost:3333/group/${groupId}/expense/register`, {
-        credentials: "include",
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newExpense),
-      }).then(() => {
-        allExpensesOnGroup();
-        setIsModalOpen(false);
-      });
+      if (newExpense) {
+        await fetch(`http://localhost:3333/group/${groupId}/expense/register`, {
+          credentials: "include",
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newExpense),
+        }).then(() => {
+          allExpensesOnGroup();
+          setIsModalOpen(false);
+          setNewExpense(null);
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -60,7 +65,7 @@ const Expenses = () => {
   };
   useEffect(() => {
     allExpensesOnGroup();
-  }, []);
+  }, [groupId]);
   const getAllGroupUser = async () => {
     try {
       if (groupId) {
@@ -86,6 +91,7 @@ const Expenses = () => {
         setTotalGroupExpense(total);
       });
   };
+
   useEffect(() => {
     getAllExpenses();
   }, []);
@@ -130,7 +136,7 @@ const Expenses = () => {
               </div>
 
               {isModalOpen && (
-                <div className="absolute top-[20%] left-[50%] transform -translate-x-1/2 bg-gray-100 flex w-[90%] lg:w-[50%] flex-col items-center justify-center max-w-lg rounded-lg shadow-lg p-6">
+                <div className="absolute top-[20%]  left-[50%] transform -translate-x-1/2 bg-gray-100 flex w-[90%] lg:w-[50%] flex-col items-center justify-center max-w-lg rounded-lg shadow-lg p-6">
                   <form
                     onSubmit={handleSubmit}
                     className="flex flex-col gap-4 w-full max-w-xs"
@@ -144,12 +150,20 @@ const Expenses = () => {
                         })
                       }
                     />
-                    <button
-                      className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg transition"
-                      type="submit"
-                    >
-                      Add Expense
-                    </button>
+                    <div className=" flex ">
+                      <button
+                        className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg transition"
+                        type="submit"
+                      >
+                        Add Expense
+                      </button>
+                      <button
+                        onClick={() => setIsModalOpen(!isModalOpen)}
+                        className=" flex ml-4 bg-gray-600 items-center hover:bg-red-700 text-sm text-white px-2 py-1 rounded-lg transition"
+                      >
+                        <span> Close</span> <X />
+                      </button>
+                    </div>
                   </form>
                 </div>
               )}
@@ -194,6 +208,7 @@ const Expenses = () => {
                     </tbody>
                   </table>
                 </div>
+                <UserTotalExpenses groupId={groupId} />
               </div>
             </div>
           </div>

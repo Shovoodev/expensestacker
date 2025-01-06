@@ -55,7 +55,7 @@ const Group = () => {
       <GeneralNavbar fieldHeader="All groups" />
       <div className="flex">
         <Sidebar />
-        <div className="flex-1 p-5">
+        <div className="flex-1 p-2">
           <div className="flex gap-5 items-center ">
             <div className=" text-xl">sort by </div>
             <SortingByMonth />

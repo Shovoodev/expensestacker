@@ -1,6 +1,7 @@
 import express from "express";
 
 import { deleteUserById, getUserById, getUsers } from "../db/user";
+import { createUserDetail, getUserByUserEmail } from "./../db/detailUser";
 
 export const getAllUsers = async (
   req: express.Request,
@@ -73,5 +74,46 @@ export const getSingleUser = async (
     }
   } catch (error) {
     console.log(error);
+  }
+};
+export const registerUserDetails = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  const { firstname, lastname, bio, phone, address, email } = req.body;
+  try {
+    if (!firstname || !bio || !lastname || !phone || !address) {
+      return res.status(400);
+    }
+    const existingUser = await getUserByUserEmail(email);
+    console.log(existingUser);
+
+    if (existingUser) {
+      return res.status(400).json({ message: "Already registrated user" });
+    }
+    const user = await createUserDetail({
+      firstname,
+      lastname,
+      email,
+      bio,
+      address,
+      phone,
+    });
+    return res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getUserDetails = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const { email } = req.body;
+    const userDetail = await getUserByUserEmail(email);
+    return res.status(200).json(userDetail);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(400);
   }
 };

@@ -50,7 +50,7 @@ const Product = () => {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     })
-      .then(() => navigate(`/groups`))
+      .then(() => navigate(`/group/${groupId}/expenses`))
       .catch((error) => console.error(error));
   };
 

@@ -1,4 +1,3 @@
-import { find } from "lodash";
 import mongoose from "mongoose";
 
 const expenseSchema = new mongoose.Schema({

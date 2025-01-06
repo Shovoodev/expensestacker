@@ -1,28 +1,51 @@
-import React from "react";
-import { X } from "lucide-react";
-const NewlyAddedExpenses = ({ expensename, created_at }) => {
+import React, { useEffect, useState } from "react";
+
+const NewlyAddedExpenses = ({ expensename, created_at, group_id }) => {
+  const [totalGroupExpense, setTotalGroupExpense] = useState();
+  const [doneBy, setDoneBy] = useState();
+  const getAllExpenses = async () => {
+    await fetch(`http://localhost:3333/${group_id}/totalcostofproducts`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const total = data.reduce((sum, { totalCost }) => sum + totalCost, 0);
+        setTotalGroupExpense(total);
+        const registerExpeses = data?.map((id) => id.done_By);
+        console.log({ registerExpeses });
+        setDoneBy(registerExpeses);
+      });
+  };
+
+  useEffect(() => {
+    getAllExpenses();
+  }, []);
   return (
-    <div>
-      <div className=" flex  justify-between"></div>
-      <div className=" h-26 w-56 bg-white">
-        <div className=" flex justify-start gap-2 p-1 ">
-          <button className=""> tag</button> <button> type</button>
-          <button>product</button>
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4 max-w-md mx-auto mb-4">
+      <div className="flex gap-2 mb-4">
+        <button className="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300">
+          Tag
+        </button>
+
+        <button className="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300">
+          Product
+        </button>
+      </div>
+
+      <div className="relative rounded-lg ">
+        <div className=" flex flex-col justify-center items-center text-center ">
+          <h2 className="text-lg font-semibold">{expensename}</h2>
+          <p className="text-sm">Total: {totalGroupExpense} £</p>
         </div>
-        <div className="relative max-w-xl mx-auto">
-          <img
-            className="h-14 w-full object-cover rounded-md"
-            src="/expense.jpg"
-            alt="Random image"
-          />
-          <div className="absolute inset-0 bg-gray-700 opacity-80 rounded-md"></div>
-          <div className="absolute gap-4 inset-0 flex items-center justify-evenly">
-            <h2 className="text-white text-cl font-bold">{expensename}</h2>
-            <h2 className="text-white text-cl font-bold">Total : £</h2>
-          </div>
-        </div>
-        <div className=" items-center">data : {created_at}</div>
-        <div className=" mb-2">User :</div>
+      </div>
+
+      <div className="mt-4">
+        <p className="text-sm text-gray-600">
+          <span className="font-semibold">Date:</span> {created_at}
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-semibold">Done By Member:</span> {doneBy}
+        </p>
       </div>
     </div>
   );

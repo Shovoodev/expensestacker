@@ -26,7 +26,6 @@ const ShowExpenseDetail = ({ groupId }) => {
             scope="col"
             className="px-6 py-3 text-start text-black text-xs font-medium  uppercase dark:text-neutral-500"
           >
-            {" "}
             <p className="block font-sans text-sm antialiased font-normal leading-none ">
               Total
             </p>
