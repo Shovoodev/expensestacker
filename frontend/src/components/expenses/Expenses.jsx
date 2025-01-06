@@ -113,15 +113,18 @@ const Expenses = () => {
                 {loading ? (
                   <p>Loading...</p>
                 ) : printAllExpenses.length > 0 ? (
-                  printAllExpenses.map(({ _id, expensename, created_at }) => (
-                    <ExpenseButton
-                      groupId={groupId}
-                      expenseId={_id}
-                      key={_id}
-                      created_at={created_at}
-                      expensename={expensename}
-                    />
-                  ))
+                  printAllExpenses.map(
+                    ({ _id, expensename, created_at, done_By }) => (
+                      <ExpenseButton
+                        groupId={groupId}
+                        expenseId={_id}
+                        key={_id}
+                        done_By={done_By}
+                        created_at={created_at}
+                        expensename={expensename}
+                      />
+                    )
+                  )
                 ) : (
                   <p>No expense found.</p>
                 )}

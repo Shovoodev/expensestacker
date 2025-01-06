@@ -1,5 +1,5 @@
 import { MoveRight } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import FormatDate from "../Helper";
 const ExpenseButton = ({
@@ -7,11 +7,33 @@ const ExpenseButton = ({
   created_at,
   expenseId,
   expensename,
+  done_By,
   className,
   type = "button",
   onClick,
 }) => {
+  const [userName, setUserName] = useState(null);
   const viewDate = FormatDate(created_at);
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await fetch(`http://localhost:3333/${done_By}/user`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch user");
+        }
+        const user = await response.json();
+        setUserName(user?.username);
+      } catch (error) {
+        console.error("Error fetching user name:", error);
+        setUserName("Unknown");
+      }
+    };
+
+    if (done_By) {
+      fetchUserName();
+    }
+  }, [done_By]);
+  console.log({ userName, setUserName });
 
   return (
     <>
@@ -37,7 +59,7 @@ const ExpenseButton = ({
           </div>
           <div className="flex p-2">
             <div className="">
-              <p>Done By : //todo</p>
+              <p>Done By : {userName ? userName : null}</p>
               <p>data : {viewDate} </p>
             </div>
             <div></div>
