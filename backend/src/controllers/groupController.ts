@@ -89,7 +89,6 @@ export const delteteGroup = async (
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
-  console.log("here");
   try {
     const { groupId } = req.params;
 

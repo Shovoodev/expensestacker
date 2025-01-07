@@ -15,7 +15,7 @@ export default (router: express.Router) => {
     "/expense/:expenseId/product/register",
     registerProductOnExpenses
   );
-  router.get("/:groupId/expense/:expenseId/products", getExpenseProducts);
+  router.get("/expense/:expenseId/products", getExpenseProducts);
   router.get("/:groupId/products", getAllExpensesOnGroup);
   router.get("/:groupId/totalcostofproducts", getTotalExpenseByUser);
   router.put("/product/update/:productId", updateProduct);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Input from "../ui/Input";
 import ExpenseButton from "./ExpenseButton";
-import { Trash2, X } from "lucide-react";
+import { MoveLeft, Trash2, X } from "lucide-react";
 import GeneralNavbar from "../main/GeneralNavbar";
 import { NavLink, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
@@ -15,12 +15,29 @@ const Expenses = () => {
   const [printAllExpenses, setPrintAllExpenses] = useState([]);
   const [totalGroupExpense, setTotalGroupExpense] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const [expenseUserRegister, setExpenseUserRegister] = useState();
   const [groupUser, setGroupUser] = useState([]);
   const { groupId } = useParams();
 
+  const getowner = async () => {
+    const user = await fetch(`http://localhost:3333/isowner`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+    const owner = await fetch(`http://localhost:3333/${groupId}/isowner`)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+    if (user === owner) {
+      setIsOwner(true);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -65,6 +82,7 @@ const Expenses = () => {
   };
   useEffect(() => {
     allExpensesOnGroup();
+    getowner();
   }, [groupId]);
   const getAllGroupUser = async () => {
     try {
@@ -110,6 +128,15 @@ const Expenses = () => {
           <div className="flex p-5">
             <div className="flex-col justify-between items-start">
               <div className="flex flex-wrap gap-3">
+                <div className="flex items-center ">
+                  <NavLink
+                    to={`/groups`}
+                    className="flex items-center gap-2 mb-24 p-2 text-lg font-bold text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-700 hover:text-white transition"
+                  >
+                    <MoveLeft />
+                    <span>Back</span>
+                  </NavLink>
+                </div>
                 {loading ? (
                   <p>Loading...</p>
                 ) : printAllExpenses.length > 0 ? (
@@ -188,6 +215,7 @@ const Expenses = () => {
                     <p className="gap-4">This group is empty </p>
                   )}
                 </div>
+                <h1 className="p-3 font-bold"> Last expenses recorded :</h1>
                 <div className=" mb-7 border rounded-lg overflow-hidden dark:border-neutral-700">
                   <ShowExpenseDetail groupId={groupId} />
                 </div>
@@ -218,13 +246,19 @@ const Expenses = () => {
         </div>
         <div>
           <div>
-            <button
-              onClick={deleteCurrentGroup}
-              className="flex  items-center mt-4justify-between text-white hover:bg-red-700 bg-black font-medium rounded-full text-sm p-3"
-            >
-              <Trash2 size={36} strokeWidth={2.25} />
-              <span className="hidden md:inline ml-2">Delete Group</span>
-            </button>
+            {isOwner ? (
+              <>
+                <button
+                  onClick={deleteCurrentGroup}
+                  className="flex  items-center mt-4justify-between text-white hover:bg-red-700 bg-black font-medium rounded-full text-sm p-3"
+                >
+                  <Trash2 size={36} strokeWidth={2.25} />
+                  <span className="hidden md:inline ml-2">Delete Group</span>
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
             <div className=" flex justify-end ">
               <div className=" grid grid-cols-1 gap-2">
                 <h1 className=" p-4 text-xl "> Members on this Group </h1>

@@ -20,8 +20,10 @@ const ExpenseDetailList = () => {
   return (
     <>
       {expenseDetails ? (
-        expenseDetails?.map(
-          ({ _id, totalCost, expensename, done_By, createdTime }) => {
+        expenseDetails
+          ?.slice(-4)
+          .reverse()
+          .map(({ _id, totalCost, expensename, done_By, createdTime }) => {
             const dated = FormatDate(createdTime);
             return (
               <tr key={_id}>
@@ -39,8 +41,7 @@ const ExpenseDetailList = () => {
                 </td>
               </tr>
             );
-          }
-        )
+          })
       ) : (
         <p className="gap-4">NO Other Expenses </p>
       )}

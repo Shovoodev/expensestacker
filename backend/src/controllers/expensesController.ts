@@ -12,6 +12,8 @@ import {
 import { AuthenticatedRequest } from "./types";
 import { getGroupById } from "./../db/group";
 import { getMembersByGroupId, getMembersByUserId } from "./../db/membership";
+import { getUserById } from "./../db/user";
+import { getProductByExpenseId } from "./../db/product";
 
 export const registerExpenceOnGroup = async (
   req: AuthenticatedRequest,
@@ -69,6 +71,7 @@ export const deleteExpense = async (
     const { expenseId } = req.params;
 
     const deleted = await deleteExpensesById(expenseId);
+    console.log({ deleted });
 
     return res.status(200).json(deleted);
   } catch (error) {
@@ -114,21 +117,24 @@ export const getAllExpensesForFeed = async (
 };
 
 export const userExpenseRegisterCalculation = async (
-  req: AuthenticatedRequest,
+  req: express.Request,
   res: express.Response
 ): Promise<any> => {
   try {
-    const user = req.identity;
-    // const { groupId } = req.params;
-    console.log({ user });
-    //const groups = await getExpenseByDoneBy(user.username);
-    // console.log({ groups });
+    const { groupId } = req.params;
+    const groups = await getExpenses(groupId);
 
-    // if (!groups) {
-    //   return res.status(404).json({ error: "Expense not found" });
-    // }
+    const val = groups.map((id) => {
+      console.log({ id });
 
-    return res.status(200).json();
+      id.done_By;
+    });
+    console.log({ val });
+
+    if (!groups) {
+      return res.status(404).json({ error: "Expense not found" });
+    }
+    return res.status(200).json(val);
   } catch (error) {
     console.log(error);
   }

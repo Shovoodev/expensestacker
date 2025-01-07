@@ -15,11 +15,7 @@ export default (router: express.Router) => {
   router.get("/group/hookexpenses", isAuthenticated, getExpenseDoneByUser);
   router.get("/allexpenses", getAllExpensesForFeed);
   router.put("/expense/update/:expenseId", updateExpenseName);
-  router.get(
-    "/calculation/singleUserExpenses",
-    isAuthenticated,
-    userExpenseRegisterCalculation
-  );
+  router.get("/:groupId/calculationsingle", userExpenseRegisterCalculation);
   router.post(
     "/group/:groupId/expense/register",
     isAuthenticated,

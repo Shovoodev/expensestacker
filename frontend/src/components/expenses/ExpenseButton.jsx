@@ -33,7 +33,6 @@ const ExpenseButton = ({
       fetchUserName();
     }
   }, [done_By]);
-  console.log({ userName, setUserName });
 
   return (
     <>

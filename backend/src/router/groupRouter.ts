@@ -12,6 +12,6 @@ export default (router: express.Router) => {
   router.get("/groups", isAuthenticated, getGroupsByUser);
   router.post("/:userId/group/register", registerUserGroup);
   router.put("/group/update/:groupId", updateGroupName);
-  router.delete("/group/delete/:groupId", delteteGroup);
+  router.delete("/group/delete/:groupId", isAuthenticated, delteteGroup);
   router.get("/:groupId/expenses/calculation", groupExpenseCalculation);
 };

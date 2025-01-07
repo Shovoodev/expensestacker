@@ -2,6 +2,10 @@ import express from "express";
 
 import { deleteUserById, getUserById, getUsers } from "../db/user";
 import { createUserDetail, getUserByUserEmail } from "./../db/detailUser";
+import { getGroupById } from "./../db/group";
+import { AuthenticatedRequest } from "./types";
+import { log } from "handlebars";
+import { getMembersByGroupId } from "./../db/membership";
 
 export const getAllUsers = async (
   req: express.Request,
@@ -112,6 +116,33 @@ export const getUserDetails = async (
     const { email } = req.body;
     const userDetail = await getUserByUserEmail(email);
     return res.status(200).json(userDetail);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(400);
+  }
+};
+export const getSingleUserForOwner = async (
+  req: AuthenticatedRequest,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const user = req.identity;
+    const userid = user._id.toString();
+    return res.status(200).json(userid);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(400);
+  }
+};
+export const getOwnerOfGroup = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const { groupId } = req.params;
+    const userDetail = await getGroupById(groupId);
+    const ownerId = userDetail?.owner_id;
+    return res.status(200).json(ownerId);
   } catch (error) {
     console.log(error);
     res.sendStatus(400);

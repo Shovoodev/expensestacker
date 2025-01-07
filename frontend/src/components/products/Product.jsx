@@ -43,12 +43,12 @@ const Product = () => {
       .then(() => setIsModalOpen(false))
       .catch((error) => console.error(error));
   };
-
   const deleteCurrentExpenses = async () => {
     const pro = expenseId;
-    await fetch(`http://localhost:3333/expense/delete/` + pro, {
+    await fetch(`http://localhost:3333/${groupId}/expense/delete/` + pro, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     })
       .then(() => navigate(`/group/${groupId}/expenses`))
       .catch((error) => console.error(error));
@@ -56,7 +56,7 @@ const Product = () => {
 
   const getAllProducts = () => {
     setLoading(true);
-    fetch(`http://localhost:3333/${groupId}/expense/${expenseId}/products`)
+    fetch(`http://localhost:3333/expense/${expenseId}/products`)
       .then((res) => res.json())
       .then((data) => {
         const totalCost = data.reduce(
