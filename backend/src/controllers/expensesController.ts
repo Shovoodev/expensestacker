@@ -159,3 +159,54 @@ export const getExpenseDoneByUser = async (
     res.status(400).json({ error: "Failed to fetch expenses" });
   }
 };
+export const isOwnerToGiveRightsToDelete = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  const { expenseId } = req.params;
+  try {
+    const data = await getExpensesById(expenseId);
+    const doneUser = data.done_By;
+    console.log({ doneUser });
+
+    if (data) {
+      return res.status(200).json(doneUser);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "Failed to fetch expenses" });
+  }
+};
+export const userTotalexpendeture = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const { groupId } = req.params;
+    let inTotal = 0;
+    const members = await getMembersByGroupId(groupId);
+
+    const expenseUsers = members.map(async (user) => {
+      const userid = user.userId.toString();
+
+      const expenseCalculation = await getExpenseByDoneBy(userid);
+      const expenseId = expenseCalculation.map(async (id) => {
+        const singleExpenseid = id._id.toString();
+        const specificUser = await getExpenseByDoneBy(userid);
+        const separatingUser = specificUser.map((id) => id.done_By);
+        const expenseDetail = await getProductByExpenseId(singleExpenseid);
+        const flatexpenses = expenseDetail.flat();
+
+        const totalCost = flatexpenses.reduce(
+          (sum, { price, quantity }) => sum + price * quantity,
+          0
+        );
+        return (inTotal += totalCost);
+      });
+    });
+
+    return res.status(200).json(inTotal);
+  } catch (error) {
+    console.log(error);
+  }
+};

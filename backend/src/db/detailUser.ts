@@ -18,5 +18,7 @@ export const createUserDetail = (values: Record<string, any>) =>
   new userModel(values).save().then((user) => user.toObject());
 export const deleteUserByUserId = (id: string) =>
   userModel.findByIdAndDelete({ _id: id });
-export const updateUserByUserId = (id: string, values: Record<string, any>) =>
-  userModel.findByIdAndUpdate(id, values);
+export const updateUserDetailsByUserId = (
+  id: string,
+  values: Record<string, any>
+) => userModel.findByIdAndUpdate(id, values);

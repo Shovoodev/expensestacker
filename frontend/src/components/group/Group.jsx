@@ -6,6 +6,7 @@ import { useUser } from "../hook/use-user";
 import Sidebar from "../main/Sidebar";
 import SortingByMonth from "./sorting/SortingByMonth";
 import { X } from "lucide-react";
+import GroupeNavbar from "../main/GroupeNavbar";
 const Group = () => {
   const [newGroup, setNewGroup] = useState({ groupName: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,7 +55,7 @@ const Group = () => {
   };
   return (
     <>
-      <GeneralNavbar fieldHeader="All groups" />
+      <GroupeNavbar />
       <div
         className={`flex  ${
           isModalOpen ? " blur-sm disabled:cursor-pointer " : ""

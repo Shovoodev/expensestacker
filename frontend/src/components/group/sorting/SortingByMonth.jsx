@@ -10,12 +10,10 @@ const SortingByMonth = () => {
     const month = date.toLocaleString("default", { month: "long" }); // e.g., "January"
     return month;
   };
-  console.log({ monthSelector });
 
   const handleChange = async (e) => {
     const { value } = e.target;
     setMonthSelector(value);
-    console.log({ value });
     await fetch(`http://localhost:3333/groups`, {
       credentials: "include",
     })

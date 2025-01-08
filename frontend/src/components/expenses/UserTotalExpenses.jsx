@@ -3,7 +3,17 @@ import UserTotalExpensesDetail from "./UserTotalExpensesDetail";
 
 const UserTotalExpenses = ({ groupId }) => {
   const [userDetail, setUserDetail] = useState();
-  const [totalCostOfMember, setTotalCostOfMember] = useState(0);
+  const [totalSpend, setTotalSpend] = useState(0);
+  const counterOfExpenses = async () => {
+    await fetch(`http://localhost:3333/${groupId}/total/spend`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log({ data });
+        setTotalSpend(data);
+      });
+  };
   const getAllGroupUser = async () => {
     try {
       if (groupId) {
@@ -12,25 +22,12 @@ const UserTotalExpenses = ({ groupId }) => {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log({ data });
-
             setUserDetail(data);
           });
       }
     } catch (error) {
       console.error(error);
     }
-  };
-  const counterOfExpenses = async () => {
-    await fetch(`http://localhost:3333/${groupId}/calculationsingle`, {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log({ data });
-
-        setTotalCostOfMember(data);
-      });
   };
   useEffect(() => {
     counterOfExpenses();
@@ -65,7 +62,7 @@ const UserTotalExpenses = ({ groupId }) => {
             return (
               <UserTotalExpensesDetail
                 user={data?.username}
-                totalCost={totalCostOfMember}
+                totalCost={totalSpend}
               />
             );
           })

@@ -43,7 +43,7 @@ export const getExpenseProducts = async (
   req: express.Request,
   res: express.Response
 ): Promise<any> => {
-  const { expenseId } = req.params;
+  const { expenseId, groupId } = req.params;
   const expense = await getExpensesById(expenseId);
 
   if (!expense) {

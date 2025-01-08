@@ -1,11 +1,11 @@
 import React from "react";
-import GeneralNavbar from "../main/GeneralNavbar";
 import ProfileSidebar from "./ProfileSidebar";
+import GroupeNavbar from "../main/GroupeNavbar";
 
 const Profile = () => {
   return (
     <>
-      <GeneralNavbar />
+      <GroupeNavbar />
       <ProfileSidebar />
     </>
   );

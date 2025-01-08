@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import ProductButton from "./ProductButton";
-import GeneralNavbar from "../main/GeneralNavbar";
 import { useUser } from "../hook/use-user";
 import { useNavigate } from "react-router-dom";
 import { Trash2, X } from "lucide-react";
@@ -10,11 +9,11 @@ import { useParams } from "react-router";
 import ProductNavbar from "./ProductNavbar";
 import ProductSidebar from "./ProductSidebar";
 import ProductListing from "./ProductListing";
+import ProductHeader from "./ProductHeader";
 
 const Product = () => {
   const { groupId } = useParams();
-
-  const { user } = useUser();
+  const [isOwner, setIsOwner] = useState(false);
   const [totalCost, setTotalCost] = useState(0);
   const [totalProduct, setTotalProduct] = useState(0);
   const [allProducts, setAllProducts] = useState(null);
@@ -70,17 +69,34 @@ const Product = () => {
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   };
-
+  const getowner = async () => {
+    const user = await fetch(`http://localhost:3333/isowner`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+    const owner = await fetch(`http://localhost:3333/${expenseId}/isitowner`)
+      .then((res) => res.json())
+      .then((data) => {
+        return data;
+      });
+    if (user === owner) {
+      setIsOwner(true);
+    }
+  };
   useEffect(() => {
     getAllProducts();
+    getowner();
   }, [expenseId]);
 
   return (
     <>
       <div className="">
-        <GeneralNavbar
-          fieldHeader="Expense done by Member"
-          client={user?.username}
+        <ProductHeader
+          isOwner={isOwner}
+          deleteCurrentExpenses={deleteCurrentExpenses}
         />
       </div>
       <div

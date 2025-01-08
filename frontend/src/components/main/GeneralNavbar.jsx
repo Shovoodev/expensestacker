@@ -86,6 +86,13 @@ const GeneralNavbar = ({ className, isOwner, deleteCurrentGroup }) => {
                   SignOut
                 </button>
               </MenuItem>
+              <MenuItem>
+                <NavLink to="/user">
+                  <span className="group flex w-full items-center gap-2 hover:bg-gray-700 hover:text-white rounded-lg py-1.5 px-3 ">
+                    Profile
+                  </span>
+                </NavLink>
+              </MenuItem>
             </MenuItems>
           </Menu>
         </div>

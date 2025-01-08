@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useParams } from "react-router";
 import { useUser } from "../hook/use-user";
 import {
   Inbox,
@@ -15,6 +15,7 @@ import NavList from "../ui/NavList";
 const Sidebar = () => {
   const [openSidebar, setOpenSidebar] = useState(true);
   const { user } = useUser();
+  const { groupId } = useParams();
   const toggle = () => setOpenSidebar(!openSidebar);
   return (
     <aside
@@ -61,7 +62,7 @@ const Sidebar = () => {
             className="p-2 mt-7 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group "
             openSidebar={openSidebar}
             children={<Inbox color="black" />}
-            header="inbox"
+            header="Notification"
           />
           <NavList
             address="/profile"
@@ -77,13 +78,7 @@ const Sidebar = () => {
             children={<Users color="black" />}
             header="Group"
           />
-          <NavList
-            address="/groups"
-            openSidebar={openSidebar}
-            className="p-2 mt-7 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group "
-            children={<Euro color="black" />}
-            header="Your Expenses"
-          />
+
           <NavList
             openSidebar={openSidebar}
             className="p-2 mt-7 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group "

@@ -16,5 +16,5 @@ export default (router: express.Router) => {
   router.post("/:userId/:groupId/invite", inviteNewUser);
   router.post("/invitation/join/:token", joinInvitedUser);
   router.delete("/:userId/:groupId/delete", deleteUserFronGroup);
-  router.post("/:groupId/'token=:token/accept", getGroupUsingInviteToken);
+  router.post("/:groupId/token=:token/accept", getGroupUsingInviteToken);
 };

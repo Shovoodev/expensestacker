@@ -4,7 +4,7 @@ import { NavLink } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 
-const GroupeNavbar = ({ className, isOwner, deleteCurrentGroup }) => {
+const ProductHeader = ({ className, isOwner, deleteCurrentExpenses }) => {
   const navigate = useNavigate();
   const handleClick = async () => {
     await fetch(`http://localhost:3333/logout`, {
@@ -38,6 +38,37 @@ const GroupeNavbar = ({ className, isOwner, deleteCurrentGroup }) => {
               <Bell color="black" className="w-7 h-7 mt-1 " />
             </MenuButton>
           </Menu>
+          <Menu>
+            <MenuButton className="inline-flex items-center gap-2 rounded-md px-2 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none   data-[focus]:outline-1 data-[focus]:outline-white">
+              <Settings size={32} color="black" />
+            </MenuButton>
+            <MenuItems
+              anchor="bottom-end"
+              className="w-52 flex-col  justify-center rounded-xl border border-white/5 bg-gray-300 p-2 text-sm/6 transition duration-100 ease-out  focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0"
+            >
+              <MenuItem className="px-8 py-5">
+                {isOwner ? (
+                  <>
+                    <button
+                      onClick={deleteCurrentExpenses}
+                      className="group flex hover:bg-red-600 hover:text-white w-full items-center gap-2 rounded-lg py-1.5 px-3 "
+                    >
+                      <Trash2 size={32} />
+                      Delete Expense
+                    </button>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </MenuItem>
+              <MenuItem>
+                <button className="group flex w-full items-center gap-2 hover:bg-gray-700 hover:text-white rounded-lg py-1.5 px-3 ">
+                  <SquarePlus size={32} />
+                  Update Expense
+                </button>
+              </MenuItem>
+            </MenuItems>
+          </Menu>
 
           <Menu>
             <MenuButton>
@@ -63,4 +94,4 @@ const GroupeNavbar = ({ className, isOwner, deleteCurrentGroup }) => {
   );
 };
 
-export default GroupeNavbar;
+export default ProductHeader;

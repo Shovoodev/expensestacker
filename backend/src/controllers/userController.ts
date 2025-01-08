@@ -1,7 +1,11 @@
 import express from "express";
 
 import { deleteUserById, getUserById, getUsers } from "../db/user";
-import { createUserDetail, getUserByUserEmail } from "./../db/detailUser";
+import {
+  createUserDetail,
+  getUserByUserEmail,
+  updateUserDetailsByUserId,
+} from "./../db/detailUser";
 import { getGroupById } from "./../db/group";
 import { AuthenticatedRequest } from "./types";
 import { log } from "handlebars";
@@ -91,9 +95,17 @@ export const registerUserDetails = async (
     }
     const existingUser = await getUserByUserEmail(email);
     console.log(existingUser);
-
+    const userid = existingUser._id.toString();
     if (existingUser) {
-      return res.status(400).json({ message: "Already registrated user" });
+      const data = await updateUserDetailsByUserId(userid, {
+        firstname,
+        lastname,
+        email,
+        bio,
+        address,
+        phone,
+      });
+      return res.status(200).json(data);
     }
     const user = await createUserDetail({
       firstname,

@@ -52,10 +52,7 @@ const ProductSidebar = () => {
         <br />
         <ul className="space-y-2">
           <li>
-            <a
-              href="#"
-              className="flex items-center gap-4 p-2 text-gray-700 hover:bg-gray-200 rounded-lg mx-4"
-            >
+            <a className="flex items-center gap-4 p-2 text-gray-700 hover:bg-gray-200 rounded-lg mx-4">
               <span className="material-icons-outlined">
                 <House />
               </span>
@@ -63,10 +60,7 @@ const ProductSidebar = () => {
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              className="flex items-center gap-4 p-2 text-gray-700 hover:bg-gray-200 rounded-lg mx-4"
-            >
+            <a className="flex items-center gap-4 p-2 text-gray-700 hover:bg-gray-200 rounded-lg mx-4">
               <span className="material-icons-outlined">
                 <ChartArea size={28} />
               </span>
@@ -85,10 +79,7 @@ const ProductSidebar = () => {
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              className="flex items-center gap-4 p-2 text-gray-700 hover:bg-gray-200 rounded-lg mx-4"
-            >
+            <a className="flex items-center gap-4 p-2 text-gray-700 hover:bg-gray-200 rounded-lg mx-4">
               <span className="material-icons-outlined">
                 <HandCoins size={32} />
               </span>
@@ -96,10 +87,7 @@ const ProductSidebar = () => {
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              className="flex items-center gap-4 p-2 text-gray-700 hover:bg-gray-200 rounded-lg mx-4"
-            >
+            <a className="flex items-center gap-4 p-2 text-gray-700 hover:bg-gray-200 rounded-lg mx-4">
               <span className="material-icons-outlined">
                 {" "}
                 <Pocket size={32} />
