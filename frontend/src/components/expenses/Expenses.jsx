@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Input from "../ui/Input";
 import ExpenseButton from "./ExpenseButton";
-import { MoveLeft, Trash2, X } from "lucide-react";
+import { MoveLeft, Settings, Trash2, X } from "lucide-react";
 import GeneralNavbar from "../main/GeneralNavbar";
 import { NavLink, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
@@ -60,11 +60,12 @@ const Expenses = () => {
 
   const deleteCurrentGroup = async () => {
     try {
+      console.log("hear");
+
       await fetch(`http://localhost:3333/group/delete/${groupId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-      });
-      navigate(`/groups`);
+      }).then(() => navigate(`/groups`));
     } catch (error) {
       console.error(error);
     }
@@ -119,8 +120,15 @@ const Expenses = () => {
 
   return (
     <>
-      <GeneralNavbar />
-      <div className="flex  justify-between">
+      <GeneralNavbar
+        deleteCurrentGroup={deleteCurrentGroup}
+        isOwner={isOwner}
+      />
+      <div
+        className={`flex  justify-between  ${
+          isModalOpen ? " blur-sm disabled:cursor-pointer " : ""
+        }`}
+      >
         <div className="flex">
           <div>
             <Sidebar />
@@ -165,38 +173,6 @@ const Expenses = () => {
                 </div>
               </div>
 
-              {isModalOpen && (
-                <div className="absolute top-[20%]  left-[50%] transform -translate-x-1/2 bg-gray-100 flex w-[90%] lg:w-[50%] flex-col items-center justify-center max-w-lg rounded-lg shadow-lg p-6">
-                  <form
-                    onSubmit={handleSubmit}
-                    className="flex flex-col gap-4 w-full max-w-xs"
-                  >
-                    <Input
-                      label="Your Expense Name"
-                      onChange={(e) =>
-                        setNewExpense({
-                          ...newExpense,
-                          expensename: e.target.value,
-                        })
-                      }
-                    />
-                    <div className=" flex ">
-                      <button
-                        className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg transition"
-                        type="submit"
-                      >
-                        Add Expense
-                      </button>
-                      <button
-                        onClick={() => setIsModalOpen(!isModalOpen)}
-                        className=" flex ml-4 bg-gray-600 items-center hover:bg-red-700 text-sm text-white px-2 py-1 rounded-lg transition"
-                      >
-                        <span> Close</span> <X />
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
               <div className="flex-col mt-6  rounded">
                 <div className=" flex gap-4 p-1">
                   <div>Sort By Member : </div>
@@ -246,22 +222,9 @@ const Expenses = () => {
         </div>
         <div>
           <div>
-            {isOwner ? (
-              <>
-                <button
-                  onClick={deleteCurrentGroup}
-                  className="flex  items-center mt-4justify-between text-white hover:bg-red-700 bg-black font-medium rounded-full text-sm p-3"
-                >
-                  <Trash2 size={36} strokeWidth={2.25} />
-                  <span className="hidden md:inline ml-2">Delete Group</span>
-                </button>
-              </>
-            ) : (
-              <></>
-            )}
             <div className=" flex justify-end ">
               <div className=" grid grid-cols-1 gap-2">
-                <h1 className=" p-4 text-xl "> Members on this Group </h1>
+                <h1 className=" p-4 text-xl "> Group Members </h1>
                 {groupUser.length > 0 && groupUser ? (
                   groupUser?.map(({ _id, username }) => {
                     return <UserGroup username={username} key={_id} />;
@@ -273,6 +236,40 @@ const Expenses = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className=" backdrop-filter-none">
+        {isModalOpen && (
+          <div className="absolute top-[20%] left-[50%] transform -translate-x-1/2 bg-gray-100 flex w-[90%] lg:w-[50%] flex-col items-center justify-center max-w-lg rounded-lg shadow-lg p-6 backdrop-blur-sm backdrop-filter-none">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-4 w-full max-w-xs"
+            >
+              <Input
+                label="Your Expense Name"
+                onChange={(e) =>
+                  setNewExpense({
+                    ...newExpense,
+                    expensename: e.target.value,
+                  })
+                }
+              />
+              <div className=" flex ">
+                <button
+                  className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded-lg transition"
+                  type="submit"
+                >
+                  Add Expense
+                </button>
+                <button
+                  onClick={() => setIsModalOpen(!isModalOpen)}
+                  className=" flex ml-4 bg-gray-600 items-center hover:bg-red-700 text-sm text-white px-2 py-1 rounded-lg transition"
+                >
+                  <span> Close</span> <X />
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </>
   );

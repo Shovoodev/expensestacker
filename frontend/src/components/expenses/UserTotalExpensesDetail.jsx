@@ -1,6 +1,6 @@
 import React from "react";
 
-const UserTotalExpensesDetail = ({ user, TotalExpense }) => {
+const UserTotalExpensesDetail = ({ user, totalCost }) => {
   return (
     <>
       <tr>
@@ -8,7 +8,7 @@ const UserTotalExpensesDetail = ({ user, TotalExpense }) => {
           {user}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 ">
-          {TotalExpense}
+          {totalCost}
         </td>
       </tr>
     </>

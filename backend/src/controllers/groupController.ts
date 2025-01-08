@@ -91,8 +91,11 @@ export const delteteGroup = async (
 ): Promise<any> => {
   try {
     const { groupId } = req.params;
+    console.log({ groupId });
 
     const deletedGroup = await deleteGroupById(groupId);
+    console.log({ deletedGroup });
+
     if (!deletedGroup) {
       return res.status(404).json({ error: "Group not found" });
     }

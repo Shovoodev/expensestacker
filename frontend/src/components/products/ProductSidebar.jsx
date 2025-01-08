@@ -49,24 +49,7 @@ const ProductSidebar = () => {
             </div>
           )}
         </div>
-
-        <div className="px-4 mb-4">
-          <div
-            className={`flex items-center bg-white rounded-lg p-2 shadow-sm ${
-              isCollapsed ? "justify-center" : "gap-2"
-            }`}
-          >
-            <span className=" text-gray-500">search</span>
-            {!isCollapsed && (
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full focus:outline-none text-sm"
-              />
-            )}
-          </div>
-        </div>
-
+        <br />
         <ul className="space-y-2">
           <li>
             <a

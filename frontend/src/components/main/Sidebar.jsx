@@ -21,8 +21,8 @@ const Sidebar = () => {
       className={`bg-gray-50 shadow-lg relative text-left z-40 h-screen 
       ${
         openSidebar
-          ? " w-52 absolute top-0 left-0 mt-[-24px] inline-block transition-all duration-500 rounded-lg  -translate-x-36 sm:translate-x-0 fade-out "
-          : "w-12 top-0 left-0 z-20 mt-[-24px] h-full transition-all duration-500 transform -translate-x-2 bg-white shadow-lg peer-checked:translate-x-0 "
+          ? " w-52 absolute top-0 left-0  inline-block transition-all duration-500 rounded-lg  -translate-x-36 sm:translate-x-0 fade-out "
+          : "w-12 top-0 left-0 z-20  h-full transition-all duration-500 transform -translate-x-2 bg-white shadow-lg peer-checked:translate-x-0 "
       }`}
     >
       <div className="flex justify-between transition">

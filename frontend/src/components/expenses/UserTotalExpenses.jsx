@@ -3,6 +3,7 @@ import UserTotalExpensesDetail from "./UserTotalExpensesDetail";
 
 const UserTotalExpenses = ({ groupId }) => {
   const [userDetail, setUserDetail] = useState();
+  const [totalCostOfMember, setTotalCostOfMember] = useState(0);
   const getAllGroupUser = async () => {
     try {
       if (groupId) {
@@ -11,6 +12,8 @@ const UserTotalExpenses = ({ groupId }) => {
         })
           .then((res) => res.json())
           .then((data) => {
+            console.log({ data });
+
             setUserDetail(data);
           });
       }
@@ -18,7 +21,19 @@ const UserTotalExpenses = ({ groupId }) => {
       console.error(error);
     }
   };
+  const counterOfExpenses = async () => {
+    await fetch(`http://localhost:3333/${groupId}/calculationsingle`, {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log({ data });
+
+        setTotalCostOfMember(data);
+      });
+  };
   useEffect(() => {
+    counterOfExpenses();
     getAllGroupUser();
   }, []);
   return (
@@ -33,14 +48,7 @@ const UserTotalExpenses = ({ groupId }) => {
               User
             </p>
           </th>
-          <th
-            scope="col"
-            className="px-6 py-3 text-start text-black text-xs font-medium  uppercase dark:text-neutral-500"
-          >
-            <p className="block font-sans text-sm antialiased font-normal leading-none ">
-              Number Of Expenses
-            </p>
-          </th>
+
           <th
             scope="col"
             className="px-6 py-3 text-start text-black text-xs font-medium  uppercase dark:text-neutral-500"
@@ -54,7 +62,12 @@ const UserTotalExpenses = ({ groupId }) => {
       <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
         {userDetail ? (
           userDetail?.map((data) => {
-            return <UserTotalExpensesDetail user={data?.username} />;
+            return (
+              <UserTotalExpensesDetail
+                user={data?.username}
+                totalCost={totalCostOfMember}
+              />
+            );
           })
         ) : (
           <p className="gap-4">This group is empty </p>

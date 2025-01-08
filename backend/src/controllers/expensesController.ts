@@ -122,24 +122,14 @@ export const userExpenseRegisterCalculation = async (
 ): Promise<any> => {
   try {
     const { groupId } = req.params;
-    const groups = await getExpenses(groupId);
 
-    const val = groups.map((id) => {
-      console.log({ id });
+    const expenseCalculation = await getMembersByGroupId(groupId);
 
-      id.done_By;
-    });
-    console.log({ val });
-
-    if (!groups) {
-      return res.status(404).json({ error: "Expense not found" });
-    }
-    return res.status(200).json(val);
+    return res.status(200);
   } catch (error) {
     console.log(error);
   }
 };
-// this is for test
 export const getExpenseDoneByUser = async (
   req: AuthenticatedRequest,
   res: express.Response

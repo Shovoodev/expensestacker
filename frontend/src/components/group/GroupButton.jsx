@@ -9,7 +9,6 @@ const GroupButton = ({
   className,
   type = "button",
   created_at,
-  isActive,
 }) => {
   const { setAllGroups, allGroups } = useGroup();
   const handleDelete = async () => {
@@ -51,8 +50,8 @@ const GroupButton = ({
           <br className="shodow-black" />
           <div className="flex p-2">
             <div className=" mt-5 ml-6 p-5">
+              <p> Created By : </p>
               <p>data : {viewDate}</p>
-              <p>status : {isActive}</p>
             </div>
             <div></div>
           </div>

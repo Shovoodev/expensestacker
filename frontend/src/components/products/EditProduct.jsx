@@ -7,7 +7,7 @@ import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 const EditProduct = () => {
   const navigate = useNavigate();
-  const { productId, expenseId } = useParams();
+  const { productId, expenseId, groupId } = useParams();
 
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -25,7 +25,7 @@ const EditProduct = () => {
       body: JSON.stringify(newProduct),
     })
       .then(() => {
-        return navigate(`/expense/${expenseId}/products`);
+        return navigate(`/${groupId}/expense/${expenseId}/products`);
       })
       .catch((error) => {
         console.error(error);

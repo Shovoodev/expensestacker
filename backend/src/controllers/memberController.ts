@@ -258,3 +258,53 @@ export const getGroupUsingInviteToken = async (
     console.log(error);
   }
 };
+
+export const getAllSpendTotal = async (
+  req: express.Request,
+  res: express.Response
+): Promise<any> => {
+  try {
+    const { groupId } = req.params;
+    const members = await getMembersByGroupId(groupId);
+
+    if (!members) {
+      return res
+        .status(404)
+        .json({ message: "No members found for the group." });
+    }
+    // let inTotal = 0;
+    //     const productValues = await Promise.all(
+    //       groups.map(async (id) => {
+    //         const expensename = id.expensename;
+    //         const createdTime = id.created_at;
+    //         const done_user = await getUserById(id.done_By);
+    //         if (!done_user) {
+    //           return res.status(404).json({ error: "User not found" });
+    //         }
+    //         const done_By = done_user?.username;
+    //         const expensesId = id._id.toString();
+    //         const products = await getProductByExpenseId(expensesId);
+    //         const totalCost = products.reduce(
+    //           (sum, { price, quantity }) => sum + price * quantity,
+    //           0
+    //         );
+    //         inTotal += totalCost;
+    //         return { totalCost, expensename, createdTime, done_By, inTotal };
+    //       })
+    //     );
+    //     const flatedArray = productValues.flat();
+    //     return res.status(200).json(flatedArray);
+    const users = await Promise.all(
+      members.map(async (member) => {
+        if (member.groupId === groupId) {
+          const user = await getUserById(member.userId);
+        }
+      })
+    );
+
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users by group:", error);
+    return res.status(400);
+  }
+};
